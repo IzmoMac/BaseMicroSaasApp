@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "basemicrosaasapp.client", "basemicrosaasapp.client\basemicrosaasapp.client.esproj", "{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseMicroSaasApp.Server", "BaseMicroSaasApp.Server\BaseMicroSaasApp.Server.csproj", "{3E7FB383-C60E-4AC8-A093-71FCF4006F08}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1247BF8F-3E14-8D94-26E8-F5E4109B06E3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3E7FB383-C60E-4AC8-A093-71FCF4006F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E7FB383-C60E-4AC8-A093-71FCF4006F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E7FB383-C60E-4AC8-A093-71FCF4006F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E7FB383-C60E-4AC8-A093-71FCF4006F08}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83C0ABFD-4C1F-4041-8720-E90AFE22A6B0}
+	EndGlobalSection
+EndGlobal
