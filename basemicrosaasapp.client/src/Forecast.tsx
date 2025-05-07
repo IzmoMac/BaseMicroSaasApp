@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 
 interface Forecast {
     date: string;
@@ -8,7 +7,7 @@ interface Forecast {
     summary: string;
 }
 
-function App() {
+function ForecastApp() {
     const [forecasts, setForecasts] = useState<Forecast[]>();
 
     useEffect(() => {
@@ -40,7 +39,7 @@ function App() {
 
     return (
         <div>
-            <h1 id="tableLabel">Weather forecast</h1>
+            <h1 class="text-3xl font-bold underline" id="tableLabel">Weather forecast</h1>
             <p>This component demonstrates fetching data from the server.</p>
             {contents}
         </div>
@@ -55,4 +54,4 @@ function App() {
     }
 }
 
-export default App;
+export default ForecastApp;
