@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /jwtv1.pem
+/BaseMicroSaasApp.Server/mydb.db
+/BaseMicroSaasApp.Server/mydb.db-shm
+/BaseMicroSaasApp.Server/mydb.db-wal
