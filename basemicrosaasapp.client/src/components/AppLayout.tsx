@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ResponsiveNav from './ResponsiveNav'; // Adjust the import path and extension
-import ForecastApp from '../Forecast';
+import Dashboard from '../Dashboard';
+import Fillup from '../Fillup';
+import Trip from '../Trip';
+import NotFound from './NotFound';
 
 // Define the props for AppLayout
 interface AppLayoutProps {
@@ -14,19 +17,18 @@ const AppLayout: React.FC<AppLayoutProps> = () => {
     const renderContent = () => {
         switch (activeTab) {
             case 'Dashboard':
-                return <ForecastApp />;
-            case 'Settings':
-                //return <SettingsLayout />;
-            case 'Profile':
-            //return <ProfileLayout />;
-                return <div>Profile Content</div>;
+                return <Dashboard/> // Replace with actual Dashboard component
+            case 'Fill-up':
+                return <Fillup />;
+            case 'Trip':
+                return <Trip/>;
             default:
-                //return <DashboardLayout />; // Default to Dashboard or a fallback
+                return <NotFound/>;
         }
     };
 
     return (
-        <main className="flex h-screen">
+        <div className="flex h-screen">
             {/* Responsive Navigation Component */}
             <ResponsiveNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
