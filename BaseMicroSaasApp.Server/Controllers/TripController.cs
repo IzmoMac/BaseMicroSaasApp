@@ -1,4 +1,5 @@
 ﻿using BaseMicroSaasApp.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseMicroSaasApp.Server.Controllers
@@ -6,6 +7,7 @@ namespace BaseMicroSaasApp.Server.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TripController : Controller
     {
         [HttpPost("record")]

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 //using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using BaseMicroSaasApp.Server.Models;
 
 namespace BaseMicroSaasApp.Server
 {
@@ -18,7 +19,7 @@ namespace BaseMicroSaasApp.Server
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
@@ -27,6 +28,8 @@ namespace BaseMicroSaasApp.Server
                 options.Password.RequireLowercase = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>()
               .AddDefaultTokenProviders();
+
+            builder.Services.AddScoped<TokenService>();
 
             builder.Services.AddAuthentication(options =>
             {

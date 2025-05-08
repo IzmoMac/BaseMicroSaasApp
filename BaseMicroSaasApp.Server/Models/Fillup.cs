@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace BaseMicroSaasApp.Server.Domain;
+namespace BaseMicroSaasApp.Server.Models;
 
-public class tbl_trip
+public class Fillup
 {
     [Key]
     public long Id { get; set; }
-    public string TripType { get; set; }
-    public decimal TripDistance { get; set; }
     public decimal OdometerReading { get; set; }
+    public decimal FuelAmount { get; set; }
+    public decimal PricePerLiter { get; set; }
+    public bool IsFullTank { get; set; }
+    public decimal TotalCost { get; set; }
     public DateTime Date { get; set; }
-    public string Notes { get; set; }
 
     // Foreign key to Identity user
     public string UserId { get; set; }
 
     // Navigation property
-    public IdentityUser User { get; set; }
+    public ApplicationUser User { get; set; }
 }
