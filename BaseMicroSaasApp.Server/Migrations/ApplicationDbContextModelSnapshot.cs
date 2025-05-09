@@ -112,7 +112,7 @@ namespace BaseMicroSaasApp.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Fillups");
+                    b.ToTable("Fillups", (string)null);
                 });
 
             modelBuilder.Entity("BaseMicroSaasApp.Server.Models.RefreshToken", b =>
@@ -142,7 +142,7 @@ namespace BaseMicroSaasApp.Server.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("BaseMicroSaasApp.Server.Models.Trip", b =>
@@ -176,7 +176,7 @@ namespace BaseMicroSaasApp.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

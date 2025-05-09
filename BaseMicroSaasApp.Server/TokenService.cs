@@ -36,13 +36,14 @@ public class TokenService
     }
     public async Task<RefreshToken> GenerateRefreshTokenAsync(string userId)
     {
-        var randomNumber = new byte[32];
+        //TODO Make this longer
+        var randomNumber = new byte[256];
         using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(randomNumber);
         var tokenString = Convert.ToBase64String(randomNumber);
 
         // Set refresh token expiry (e.g., 7 days or more)
-        var refreshTokenExpiryInDays = 14;
+        var refreshTokenExpiryInDays = 7;
 
         var refreshToken = new RefreshToken
         {
@@ -75,17 +76,17 @@ public class TokenService
         }
     }
 
-    // Method to clean up expired refresh tokens
-    public async Task RemoveExpiredRefreshTokensAsync(string userId)
-    {
-        var expiredTokens = await _context.RefreshTokens
-            .Where(rt => rt.ApplicationUserId == userId && rt.IsExpired)
-        .ToListAsync();
+    // Method to clean up expired refresh tokens 
+    //public async Task RemoveExpiredRefreshTokensAsync(string userId)
+    //{
+    //    var expiredTokens = await _context.RefreshTokens
+    //        .Where(rt => rt.ApplicationUserId == userId && rt.IsExpired)
+    //    .ToListAsync();
 
-        if (expiredTokens.Any())
-        {
-            _context.RefreshTokens.RemoveRange(expiredTokens);
-            await _context.SaveChangesAsync();
-        }
-    }
+    //    if (expiredTokens.Any())
+    //    {
+    //        _context.RefreshTokens.RemoveRange(expiredTokens);
+    //        await _context.SaveChangesAsync();
+    //    }
+    //}
 }

@@ -10,10 +10,7 @@ public class FillupController : Controller
     [HttpPost("record")]
     public async Task<IActionResult> Record([FromBody] FillupForm form)
     {
-        // Simulate a long-running task
-        
-        
-
+        //TODO Add validation and save to database
         return Ok("Data Submitted Successfully");
     }
 }

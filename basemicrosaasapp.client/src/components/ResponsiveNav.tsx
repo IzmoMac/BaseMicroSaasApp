@@ -1,18 +1,14 @@
 import React from 'react';
 import { FaTachometerAlt, FaGasPump, FaUser, FaCar } from "react-icons/fa";
+import { NavLink, type NavLinkRenderProps } from 'react-router'
 
-interface ResponsiveNavProps {
-    activeTab: string;
-    setActiveTab: (tabName: string) => void;
-}
-
-const ResponsiveNav: React.FC<ResponsiveNavProps> = ({ activeTab, setActiveTab }) => {
+const ResponsiveNav: React.FC = () => {
     // Example navigation links
     const navLinks = [
-        { name: 'Dashboard', icon: <FaTachometerAlt /> },
-        { name: 'Trip', icon: <FaCar /> },
-        { name: 'Fill-up', icon: <FaGasPump /> },
-        { name: 'Account', icon: <FaUser /> },
+        { href: '/app', name: 'Dashboard', icon: <FaTachometerAlt /> },
+        { href: '/app/trip', name: 'Trip', icon: <FaCar /> },
+        { href: '/app/fillup', name: 'Fill-up', icon: <FaGasPump /> },
+        { href: '/app/account', name: 'Account', icon: <FaUser /> },
     ];
 
     return (
@@ -25,36 +21,35 @@ const ResponsiveNav: React.FC<ResponsiveNavProps> = ({ activeTab, setActiveTab }
                     <ul>
                         {navLinks.filter(link => link.name !== 'Account').map((link) => (
                             <li key={link.name} className="mb-2">
-                                <button
-                                    onClick={() => setActiveTab(link.name)}
-                                    className={`w-full text-left px-4 py-2 rounded transition-colors duration-200 cursor-pointer ${activeTab === link.name
-                                        ? 'bg-gray-700'
-                                        : 'hover:bg-gray-700'
-                                        }`}
+                                <NavLink
+                                    to={link.href} // Use link.path for the navigation target
+                                    end={link.href === '/app'}
+                                    className={({ isActive }: NavLinkRenderProps) =>
+                                        `w-full text-left px-4 py-2 rounded transition-colors duration-200 cursor-pointer flex items-center ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-700 text-gray-300'}`
+                                    }
                                 >
                                     <span className="flex items-center">
                                         {link.icon && <span className="mr-2">{link.icon}</span>}
                                         {link.name}
                                     </span>
-                                </button>
+                                </NavLink>
                             </li>
                         ))}
                     </ul>
                 </nav>
                 {/* Account Tab at the bottom */}
                 <div className="mt-auto">
-                    <button
-                        onClick={() => setActiveTab('Account')}
-                        className={`w-full text-left px-4 py-2 rounded transition-colors duration-200 cursor-pointer ${activeTab === 'Account'
-                            ? 'bg-gray-700'
-                            : 'hover:bg-gray-700'
-                            }`}
+                    <NavLink
+                        to='/app/account'
+                        className={({ isActive }: NavLinkRenderProps) =>
+                            `w-full text-left px-4 py-2 rounded transition-colors duration-200 cursor-pointer flex items-center ${isActive ? 'bg-gray-700 text-white' : 'hover:bg-gray-700 text-gray-300'}`
+                        }
                     >
                         <span className="flex items-center">
                             <FaUser className="mr-2" />
                             Account
                         </span>
-                    </button>
+                    </NavLink>
                 </div>
             </div>
 
@@ -64,19 +59,23 @@ const ResponsiveNav: React.FC<ResponsiveNavProps> = ({ activeTab, setActiveTab }
                     <ul className="flex justify-around w-full">
                         {navLinks.map((link) => (
                             <li key={link.name}>
-                                <button
-                                    onClick={() => setActiveTab(link.name)}
-                                    className={`flex flex-col items-center text-xs cursor-pointer ${activeTab === link.name
-                                        ? 'text-blue-400'
-                                        : ''
-                                        }`}
+                                <NavLink
+                                    to={link.href} // Use the link.path for navigation
+                                    end={link.href === '/app'} // Add 'end' if '/app' is your exact dashboard path
+                                    className={({ isActive }: NavLinkRenderProps) =>
+                                        // Combine base classes with active classes conditionally
+                                        //` cursor-pointer text-gray-700 hover:text-blue-400 ${isActive ? 'text-blue-400' : ''}`
+                                        `flex flex-col items-center text-xs transition-colors duration-200 cursor-pointer flex items-center ${isActive ? 'text-blue-400' : ''}`
+                                    }
                                 >
+                                    {/* Content remains the same as it was inside the button */}
                                     <span className="flex items-center">
                                         {link.icon && <span className="mr-2">{link.icon}</span>}
                                         {link.name}
                                     </span>
-                                </button>
+                                </NavLink>
                             </li>
+
                         ))}
                     </ul>
                 </nav>

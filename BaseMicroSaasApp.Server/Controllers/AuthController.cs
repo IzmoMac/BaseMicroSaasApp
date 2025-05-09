@@ -15,16 +15,26 @@ namespace BaseMicroSaasApp.Server.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IConfiguration _configuration;
+    //private readonly SignInManager<ApplicationUser> _signInManager;
+    //private readonly IConfiguration _configuration;
     private readonly TokenService _tokenService;
-
-    public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration, TokenService tokenService)
+    private readonly string _refreshTokenCookieName = "refreshToken";
+    public AuthController(UserManager<ApplicationUser> userManager, 
+        //SignInManager<ApplicationUser> signInManager, 
+        //IConfiguration configuration, 
+        TokenService tokenService)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
-        _configuration = configuration;
+        //_signInManager = signInManager;
+        //_configuration = configuration;
         _tokenService = tokenService;
+    }
+
+    [Authorize]
+    [HttpGet("test")]
+    public IActionResult Index()
+    {
+        return Ok("AuthController is working");
     }
 
     [HttpPost("login")]
@@ -36,10 +46,11 @@ public class AuthController : ControllerBase
         {
             var refreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id); // Generate and store
 
+            Response.Cookies.Append(_refreshTokenCookieName, refreshToken.Token, GetHttpOnlyCookieOptions());
+
             return Ok(new AuthResponse
             {
-                Token = _tokenService.CreateToken(user),
-                RefreshToken = refreshToken.Token
+                Token = _tokenService.CreateToken(user)
             });
         }
 
@@ -54,72 +65,105 @@ public class AuthController : ControllerBase
         if (result.Succeeded)
         {
             var refreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id)!;
+
+            Response.Cookies.Append(_refreshTokenCookieName, refreshToken.Token, GetHttpOnlyCookieOptions());
+
             return Ok(new AuthResponse
             {
-                Token = _tokenService.CreateToken(user),
-                RefreshToken = refreshToken.Token
+                Token = _tokenService.CreateToken(user)
             });
         }
 
         return BadRequest(result.Errors);
     }
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        if (Request.Cookies.TryGetValue(_refreshTokenCookieName, out string? refreshTokenString) && !string.IsNullOrEmpty(refreshTokenString))
+        {
+            await _tokenService.RevokeRefreshTokenAsync(refreshTokenString);
+        }
 
-    //TODO ISMO, CHECK FOR SECURITYT
-    //The current accessToken needs to be valid??
-    //[Authorize]
-    //[HttpPost("refresh")]
-    //public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
-    //{
-    //    // 1. Get the refresh token from the request
-    //    var refreshTokenString = request.RefreshToken;
-    //    if (string.IsNullOrEmpty(refreshTokenString))
-    //    {
-    //        return BadRequest("Refresh token is required.");
-    //    }
+        Response.Cookies.Delete(_refreshTokenCookieName);
+        return Ok(new { message = "Logged out successfully." });
+    }
 
-    //    // 2. Find the refresh token in the database
-    //    var refreshToken = await _tokenService.GetRefreshTokenAsync(refreshTokenString);
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
+    {
+        if (Request.Cookies.TryGetValue(_refreshTokenCookieName, out string? refreshTokenString) && !string.IsNullOrEmpty(refreshTokenString))
+        {
+            var userId = request.UserId;
+            if (string.IsNullOrEmpty(refreshTokenString) || string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "Invalid refresh token." });
+            }
 
-    //    // 3. Validate the refresh token
-    //    if (refreshToken == null || !refreshToken.IsActive)
-    //    {
-    //        // TODO ISMO Optional: If token exists but isn't active, could indicate potential attack.
-    //        // You might want to log this or even revoke all tokens for this user if possible.
-    //        if (refreshToken != null && !refreshToken.IsActive)
-    //        {
-    //            // Example: Revoke all tokens for this user (requires userId on token or lookup)
-    //            // var userTokens = await _context.RefreshTokens.Where(rt => rt.ApplicationUserId == refreshToken.ApplicationUserId && rt.IsActive).ToListAsync();
-    //            // userTokens.ForEach(t => t.Revoked = DateTime.UtcNow);
-    //            // await _context.SaveChangesAsync();
-    //            // Log potential suspicious activity
-    //        }
+            // Find the refresh token in the database
+            var refreshToken = await _tokenService.GetRefreshTokenAsync(refreshTokenString);
 
-    //        return Unauthorized("Invalid or expired refresh token.");
-    //    }
-        
+            if (refreshToken == null)
+            {
+                return Unauthorized(new { message = "Invalid refresh token." });
+            }
+            // Ensure the token belongs to the user
+            if (refreshToken.ApplicationUserId != userId)
+            {
+                return Unauthorized(new { message = "Invalid refresh token." });
+            }
 
-    //    // 4. Get the associated user
-    //    var user = refreshToken.User;
-    //    if (user == null)
-    //    {
-    //        return Unauthorized("User not found for the refresh token.");
-    //    }
+            // Validate the refresh token
+            if (!refreshToken.IsActive)
+            {
+                // TODO ISMO Optional: If token exists but isn't active, could indicate potential attack.
+                // You might want to log this or even revoke all tokens for this user if possible.
+                if (refreshToken != null && !refreshToken.IsActive)
+                {
+                    // Example: Revoke all tokens for this user (requires userId on token or lookup)
+                    // var userTokens = await _context.RefreshTokens.Where(rt => rt.ApplicationUserId == refreshToken.ApplicationUserId && rt.IsActive).ToListAsync();
+                    // userTokens.ForEach(t => t.Revoked = DateTime.UtcNow);
+                    // await _context.SaveChangesAsync();
+                    // Log potential suspicious activity
+                }
+                return Unauthorized(new { message = "Invalid refresh token." });
+            }
 
-    //    // 5. Generate a new access token
-    //    var newAccessToken = _tokenService.CreateToken(user);
 
-    //    // 6. (Optional but Recommended) Generate a *new* refresh token and revoke the old one
-    //    await _tokenService.RevokeRefreshTokenAsync(refreshTokenString); // Mark old one as used/revoked
-    //    var newRefreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id); // Generate and store a new one
+            // Get the associated user
+            var user = refreshToken.User;
+            if (user == null)
+            {
+                //return Unauthorized("User not found for the refresh token.");
+                return Unauthorized(new { message = "Invalid refresh token." });
+            }
 
-    //    // 7. Return the new tokens
-    //    return Ok(new AuthResponse
-    //    {
-    //        Token = newAccessToken,
-    //        RefreshToken = newRefreshToken.Token
-    //    });
-    //}
+            // Generate a new refresh token and revoke the old one
+            await _tokenService.RevokeRefreshTokenAsync(refreshTokenString); // Mark old one as used/revoked
+            var newRefreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id); // Generate and store a new one
 
+            Response.Cookies.Append(_refreshTokenCookieName, newRefreshToken.Token, GetHttpOnlyCookieOptions());
+
+            return Ok(new AuthResponse
+            {
+                // Generate a new access token
+                Token = _tokenService.CreateToken(user)
+            });
+        }
+
+        Response.Cookies.Delete(_refreshTokenCookieName);
+        return Unauthorized(new { message = "Invalid refresh token." });
+    }
+    private static CookieOptions GetHttpOnlyCookieOptions()
+    {
+        return new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true, // Set to true if using HTTPS
+            SameSite = SameSiteMode.Strict, // Or Lax
+            Expires = DateTimeOffset.UtcNow.AddDays(7), // Set appropriate expiry
+            Path = "/api/auth/refresh" // Restrict cookie path if needed
+        };
+    }
     ////TODO ALSO CHECK FOR POTENTIAL SECURITY FLAWS BEFORE IMPLMEITNG
     //// --- Optional: Revoke Endpoint ---
     //// This endpoint allows a user to revoke a specific refresh token (e.g., "logout from this device")
@@ -192,5 +236,5 @@ public class LoginRequest
 }
 public class RefreshRequest
 {
-    public string RefreshToken { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
 }

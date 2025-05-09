@@ -13,7 +13,7 @@ namespace BaseMicroSaasApp.Server.Controllers
         [HttpPost("record")]
         public async Task<IActionResult> Record([FromBody] TripForm form)
         {
-
+            //TODO Add validation and save to database
             return Ok("Data Submitted Successfully");
         }
     }
