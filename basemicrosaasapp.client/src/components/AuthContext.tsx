@@ -25,16 +25,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     //If UNDEFINED, we have to check if logged in
     //If string, we are propably logged in
     const [token, setToken] = useState<string | null | undefined>(undefined);
-
+    
     useEffect(() => {
 
         const fetchMe = async () => {
             const userId = Cookies.get('UserId');
             try {
-                const response = await api.post("/auth/refresh", {  UserId: userId } );
-                console.log(response);
-
-                setToken(response.data.Token);
+                const response = await api.post("/auth/refresh", {
+                    UserId: userId
+                }, {
+                    withCredentials: true
+                });
+                setToken(response.data.token);
             } catch {
                 setToken(null);
             }
@@ -69,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                             const userId = Cookies.get('UserId');
                             const response = await api.post("/auth/refresh", { params: { UserId: userId } });
 
-                            setToken(response.data.Token);
+                            setToken(response.data.token);
 
                             originalRequest.headers.Authorization = `Bearer ${response.data.Token}`;
                             originalRequest._retry = true;

@@ -2,11 +2,6 @@ using BaseMicroSaasApp.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace BaseMicroSaasApp.Server.Controllers;
 
@@ -15,18 +10,11 @@ namespace BaseMicroSaasApp.Server.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    //private readonly SignInManager<ApplicationUser> _signInManager;
-    //private readonly IConfiguration _configuration;
     private readonly TokenService _tokenService;
     private readonly string _refreshTokenCookieName = "refreshToken";
-    public AuthController(UserManager<ApplicationUser> userManager, 
-        //SignInManager<ApplicationUser> signInManager, 
-        //IConfiguration configuration, 
-        TokenService tokenService)
+    public AuthController(UserManager<ApplicationUser> userManager, TokenService tokenService)
     {
         _userManager = userManager;
-        //_signInManager = signInManager;
-        //_configuration = configuration;
         _tokenService = tokenService;
     }
 
@@ -50,7 +38,9 @@ public class AuthController : ControllerBase
 
             return Ok(new AuthResponse
             {
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                UserId = user.Id,
+
             });
         }
 

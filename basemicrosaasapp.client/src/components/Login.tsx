@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from "./AuthContext";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -21,7 +22,8 @@ const Login: React.FC = () => {
             .then(response => {
                 console.log('log1,',response);
                 // Handle successful login here, e.g.,
-                 setToken(response.data.Token);
+                setToken(response.data.token);
+                Cookies.set('UserId', response.data.userId, { expires: 30 }); // Set cookie with 7 days expiration
             })
             .catch(error => {
                 console.error("Login failed:", error);

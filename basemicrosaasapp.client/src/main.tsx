@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 import Dashboard from './Dashboard.tsx';
 import Fillup from './Fillup.tsx';
 import Trip from './Trip.tsx';
@@ -9,13 +9,15 @@ import { AuthProvider } from './components/AuthContext.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import './index.css';
 import Login from './components/Login.tsx';
+import LandingPage from './components/LandingPage.tsx';
+import Account from './components/Account.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Navigate to="/app" replace />} />
+                    <Route path="/" element={<LandingPage/>} />
                     <Route path="app" element={
                         <ProtectedRoute>
                             <AppLayout />
@@ -24,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
                         <Route index element={<Dashboard />} />
                         <Route path="fillup" element={<Fillup />} />
                         <Route path="trip" element={<Trip />} />
+                        <Route path="account" element={<Account />} />
                         <Route path="*" element={<Dashboard />} />
                     </Route>
                     <Route path="login" element={<Login/>} />
