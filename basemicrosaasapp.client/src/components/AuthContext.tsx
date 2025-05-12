@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect, useLayoutEffect, useState, type ReactNode } from "react";
-import api from "./api.ts"
-import Cookies from 'js-cookie';
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
@@ -25,73 +24,86 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     //If UNDEFINED, we have to check if logged in
     //If string, we are propably logged in
     const [token, setToken] = useState<string | null | undefined>(undefined);
-    
-    useEffect(() => {
 
+    useEffect(() => {
         const fetchMe = async () => {
-            const userId = Cookies.get('UserId');
             try {
-                const response = await api.post("/auth/refresh", {
-                    UserId: userId
-                }, {
-                    withCredentials: true
+                // Using fetch API instead of axios
+                const response = await fetch("/api/auth/refresh", {
+                    method: 'POST', // Specify the method
+                    credentials: 'include', // Handles withCredentials: true
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                 });
-                setToken(response.data.token);
-            } catch {
+
+                if (!response.ok) {
+                    // Handle non-2xx responses
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const responseJson = await response.json(); // Parse the JSON response
+                // Access the token property directly from the parsed JSON
+                setToken(responseJson.token);
+
+            } catch (error) {
+                // Handle network errors or errors thrown above
+                console.error("Failed to fetch or parse refresh token:", error);
                 setToken(null);
             }
         };
         fetchMe();
     }, [])
 
-    useLayoutEffect(() => {
-        const authInterceptor = api.interceptors.request.use((config: any) => {
-            config.headers.Authorization =
-                !config._retry && token
-                    ? `Bearer ${token}`
-                    : config.headers.Authorization;
-            return config;
-        });
 
-        return () => {
-            api.interceptors.request.eject(authInterceptor);
-        }
+    //useLayoutEffect(() => {
+    //    const authInterceptor = api.interceptors.request.use((config: any) => {
+    //        config.headers.Authorization =
+    //            !config._retry && token
+    //                ? `Bearer ${token}`
+    //                : config.headers.Authorization;
+    //        return config;
+    //    });
 
-    }, [token]);
+    //    return () => {
+    //        api.interceptors.request.eject(authInterceptor);
+    //    }
 
-    useLayoutEffect(() => {
-        const refreshInterceptor = api.interceptors.response.use(
-            response => response,
-            async (error) => {
-                const originalRequest = error.config;
-                try {
+    //}, [token]);
 
-                    if (error.response.status === 403) {
-                        try {
-                            const userId = Cookies.get('UserId');
-                            const response = await api.post("/auth/refresh", { params: { UserId: userId } });
+    //useLayoutEffect(() => {
+    //    const refreshInterceptor = api.interceptors.response.use(
+    //        response => response,
+    //        async (error) => {
+    //            const originalRequest = error.config;
+    //            try {
 
-                            setToken(response.data.token);
+    //                if (error.response.status === 403) {
+    //                    try {
+    //                        const userId = Cookies.get('UserId');
+    //                        const response = await api.post("/auth/refresh", { params: { UserId: userId } });
 
-                            originalRequest.headers.Authorization = `Bearer ${response.data.Token}`;
-                            originalRequest._retry = true;
+    //                        setToken(response.data.token);
 
-                            return api(originalRequest);
+    //                        originalRequest.headers.Authorization = `Bearer ${response.data.Token}`;
+    //                        originalRequest._retry = true;
 
-                        } catch {
-                            setToken(null);
-                        }
-                    }
-                } catch {
-                    setToken(null);
-                }
+    //                        return api(originalRequest);
 
-                //return Promise.reject(error);
-            })
-        return () => {
-            api.interceptors.response.eject(refreshInterceptor);
-        }
-    }, [])
+    //                    } catch {
+    //                        setToken(null);
+    //                    }
+    //                }
+    //            } catch {
+    //                setToken(null);
+    //            }
+
+    //            //return Promise.reject(error);
+    //        })
+    //    return () => {
+    //        api.interceptors.response.eject(refreshInterceptor);
+    //    }
+    //}, [])
 
     return (
         <AuthContext.Provider value={{ token, setToken }}>

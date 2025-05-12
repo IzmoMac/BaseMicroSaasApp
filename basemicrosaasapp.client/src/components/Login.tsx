@@ -1,36 +1,39 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from "./AuthContext";
-import axios from "axios";
+import { useNavigate } from "react-router";
+//import axios from "axios";
 import Cookies from 'js-cookie';
 
+
 const Login: React.FC = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { setToken } = useAuth();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        axios(
-            "/api/auth/login",
-            {
-                method: "POST",
-                data: { username, password },
-                withCredentials: true
+        //const response =
+        fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+            credentials: "include",
+        }).then((response: any) => {
+            if (!response.ok) {
+                //TODO Add proper status message
+                console.log("Login failed");
             }
-        )
-            .then(response => {
-                console.log('log1,',response);
-                // Handle successful login here, e.g.,
-                setToken(response.data.token);
-                Cookies.set('UserId', response.data.userId, { expires: 30 }); // Set cookie with 7 days expiration
-            })
-            .catch(error => {
-                console.error("Login failed:", error);
-                // Handle login error here, e.g., show an error message to the user
-            });
-
-        console.log('Login attempt with:', { username });
+            return response.json();
+        }).then((data: any) => {    
+            setToken(data.token);
+            Cookies.set('UserId', data.userId, { expires: 30 }); 
+            navigate('/app');
+        });
+        //console.log('Login attempt with:', { username });
     };
 
     return (

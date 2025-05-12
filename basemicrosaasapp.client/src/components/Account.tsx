@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "./api";
 import { useAuth } from "./AuthContext";
+import Cookies from 'js-cookie';
 function Account() {
     const [accountInfo, setAccountInfo] = useState({
         username: "",
@@ -8,13 +9,13 @@ function Account() {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const {token } = useAuth();
+    const {token, setToken } = useAuth();
     // Fetch account information
     useEffect(() => {
         const fetchAccountInfo = async () => {
             try {
                 setLoading(true);
-                const response = await api.get("/account/me", {
+                const response = await api.get("/api/account/me", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     }
@@ -30,10 +31,62 @@ function Account() {
         fetchAccountInfo();
     }, []);
 
+    useEffect(() => {
+        const fetchAccountInfo = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/account/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json' // Add if your API expects this
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setAccountInfo(data);
+
+            } catch (err) {
+                console.error("Error fetching account info:", err);
+                setError("Failed to fetch account information.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // Only fetch if token is available
+        if (token) {
+            fetchAccountInfo();
+        } else {
+            setLoading(false); // Stop loading if no token
+            setError("Authentication token not found.");
+        }
+
+    }, [token])
+
     // Handle logout
     const handleLogout = async () => {
         try {
-            await api.post("/account/logout");
+            setToken(null);
+            //Cookies.remove("UserId");
+
+            const response = await fetch("/api/auth/logout", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to log out.");
+            }
+
             alert("Logged out successfully.");
         } catch (err) {
             setError("Failed to log out.");

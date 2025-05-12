@@ -2,6 +2,7 @@ import type React from "react";
 
 import { useState, useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
+import api from './components/api';
 //import { HiHome, HiBriefcase } from 'react-icons/hi';
 export default function FillUp() {
     const [odometerReading, setOdometerReading] = useState("");
@@ -39,29 +40,28 @@ export default function FillUp() {
         };
 
         try {
-            const response = await fetch('/api/fillup/record', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+            // Assuming your axios instance is exported as 'api'
+            const response = await api.post('/api/fillup/record', formData);
 
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);
+            // Axios considers any status code within the 2xx range as successful by default
+            // If you need to handle specific status codes differently, you can check response.status
+            // For this case, a successful Axios request means the request completed without network errors
+            // and the server responded. The success of the operation is usually determined by the server's
+            // response data or status code if you need to check beyond the 2xx range.
 
-                // Reset the form
-                setOdometerReading("");
-                setFuelAmount("");
-                setPricePerLiter("");
-                setIsFullTank(false);
-                setSkippedLastFillUp(false);
-                setTotalCost("0.00");
-                setDate(new Date().toISOString().split("T")[0]);
-            } else {
-                console.error('Failed to submit form');
-            }
+            // If the request was successful (status in the 2xx range)
+            // Axios response data is directly available in response.data
+            const result = response.data;
+            console.log(result.message);
+
+            // Reset the form
+            setOdometerReading("");
+            setFuelAmount("");
+            setPricePerLiter("");
+            setIsFullTank(false);
+            setSkippedLastFillUp(false);
+            setTotalCost("0.00");
+            setDate(new Date().toISOString().split("T")[0]);
         } catch (error) {
             console.error('Error:', error);
         }
