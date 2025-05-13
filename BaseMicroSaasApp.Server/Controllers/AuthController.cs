@@ -35,8 +35,8 @@ public class AuthController : ControllerBase
         {
             var refreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id); // Generate and store
 
-            Response.Cookies.Append(_refreshTokenCookieName, refreshToken.Token, GetRefreshCookieOptions());
-            Response.Cookies.Append(_userIdTokenCookieName, user.Id, GetUserIdCookieOptions());
+            Response.Cookies.Append(_refreshTokenCookieName, refreshToken.Token, GetCookieOptions());
+            Response.Cookies.Append(_userIdTokenCookieName, user.Id, GetCookieOptions());
 
             return Ok(new AuthResponse
             {
@@ -75,8 +75,8 @@ public class AuthController : ControllerBase
             await _tokenService.RevokeRefreshTokenAsync(refreshTokenString);
         }
 
-        Response.Cookies.Delete(_refreshTokenCookieName, new CookieOptions { Path = "/api/auth/refresh" });
-        Response.Cookies.Delete(_userIdTokenCookieName, new CookieOptions { Path = "/api/" });
+        Response.Cookies.Delete(_refreshTokenCookieName);
+        Response.Cookies.Delete(_userIdTokenCookieName);
         return Ok(new { message = "Logged out successfully." });
     }
 
@@ -134,8 +134,8 @@ public class AuthController : ControllerBase
                 await _tokenService.RevokeRefreshTokenAsync(refreshTokenString); // Mark old one as used/revoked
                 var newRefreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id); // Generate and store a new one
 
-                Response.Cookies.Append(_refreshTokenCookieName, newRefreshToken.Token, GetRefreshCookieOptions());
-                Response.Cookies.Append(_userIdTokenCookieName, user.Id, GetUserIdCookieOptions());
+                Response.Cookies.Append(_refreshTokenCookieName, newRefreshToken.Token, GetCookieOptions());
+                Response.Cookies.Append(_userIdTokenCookieName, user.Id, GetCookieOptions());
 
                 return Ok(new AuthResponse
                 {
@@ -145,11 +145,11 @@ public class AuthController : ControllerBase
             }
         }
 
-        Response.Cookies.Delete(_refreshTokenCookieName, new CookieOptions { Path = "/api/auth/refresh" });
-        Response.Cookies.Delete(_userIdTokenCookieName, new CookieOptions { Path = "/api/" });
+        Response.Cookies.Delete(_refreshTokenCookieName);
+        Response.Cookies.Delete(_userIdTokenCookieName);
         return Unauthorized(new { message = "Invalid refresh token." });
     }
-    private static CookieOptions GetRefreshCookieOptions()
+    private static CookieOptions GetCookieOptions()
     {
         return new CookieOptions
         {
@@ -157,18 +157,6 @@ public class AuthController : ControllerBase
             Secure = true, // Set to true if using HTTPS
             SameSite = SameSiteMode.Strict, // Or Lax
             Expires = DateTimeOffset.UtcNow.AddDays(7), // Set appropriate expiry
-            Path = "/api/auth/refresh" // Restrict cookie path if needed
-        };
-    }
-    private static CookieOptions GetUserIdCookieOptions()
-    {
-        return new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true, // Set to true if using HTTPS
-            SameSite = SameSiteMode.Strict, // Or Lax
-            Expires = DateTimeOffset.UtcNow.AddDays(7), // Set appropriate expiry
-            Path = "/api/" // Restrict cookie path if needed
         };
     }
     ////TODO ALSO CHECK FOR POTENTIAL SECURITY FLAWS BEFORE IMPLMEITNG

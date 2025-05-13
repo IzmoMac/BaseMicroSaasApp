@@ -1,8 +1,9 @@
 import type React from "react";
-
+import { useAuth } from "./components/AuthContext";
 import { useState, useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
-import api from './components/api';
+import CallApi from "./components/ApiHelper";
+//import api from './components/api';
 //import { HiHome, HiBriefcase } from 'react-icons/hi';
 export default function FillUp() {
     const [odometerReading, setOdometerReading] = useState("");
@@ -12,7 +13,7 @@ export default function FillUp() {
     const [skippedLastFillUp, setSkippedLastFillUp] = useState(false)
     const [totalCost, setTotalCost] = useState("0.00");
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-
+    const { token, setToken } = useAuth();
 
     // Calculate total cost whenever fuel amount or price changes
     useEffect(() => {
@@ -41,7 +42,10 @@ export default function FillUp() {
 
         try {
             // Assuming your axios instance is exported as 'api'
-            const response = await api.post('/api/fillup/record', formData);
+            //const response = await api.post('/api/fillup/record', formData);
+
+            const response = await CallApi('/api/fillup/record', 'POST', token, JSON.stringify(formData));
+            if (token !== response.token) { setToken(response.token); }
 
             // Axios considers any status code within the 2xx range as successful by default
             // If you need to handle specific status codes differently, you can check response.status
@@ -51,7 +55,7 @@ export default function FillUp() {
 
             // If the request was successful (status in the 2xx range)
             // Axios response data is directly available in response.data
-            const result = response.data;
+            const result = response.jsonData;
             console.log(result.message);
 
             // Reset the form

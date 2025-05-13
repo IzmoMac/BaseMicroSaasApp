@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
-import api from "./api";
 import { useAuth } from "./AuthContext";
+import CallApi from "./ApiHelper";
 import Cookies from 'js-cookie';
-function Account() {
+const Account: React.FC = () => {
     const [accountInfo, setAccountInfo] = useState({
         username: "",
         email: "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const {token, setToken } = useAuth();
+    const { token, setToken } = useAuth();
     // Fetch account information
     useEffect(() => {
         const fetchAccountInfo = async () => {
             try {
                 setLoading(true);
-                const response = await api.get("/api/account/me", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                });
-                setAccountInfo(response.data);
+
+                const response = await CallApi("/api/account/me", 'GET', token);
+                if (token !== response.token) { setToken(response.token); }
+
+                setAccountInfo(response.jsonData);
             } catch (err) {
                 setError("Failed to fetch account information.");
             } finally {
@@ -29,51 +28,13 @@ function Account() {
         };
 
         fetchAccountInfo();
-    }, []);
-
-    useEffect(() => {
-        const fetchAccountInfo = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch('/api/account/me', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json' // Add if your API expects this
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setAccountInfo(data);
-
-            } catch (err) {
-                console.error("Error fetching account info:", err);
-                setError("Failed to fetch account information.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        // Only fetch if token is available
-        if (token) {
-            fetchAccountInfo();
-        } else {
-            setLoading(false); // Stop loading if no token
-            setError("Authentication token not found.");
-        }
-
-    }, [token])
+    }, [token, setToken]);
 
     // Handle logout
     const handleLogout = async () => {
         try {
-            setToken(null);
-            //Cookies.remove("UserId");
-
+            
+            //Here we dont use a apihelper, we just logout
             const response = await fetch("/api/auth/logout", {
                 method: "POST",
                 credentials: "include",
@@ -87,26 +48,29 @@ function Account() {
                 throw new Error("Failed to log out.");
             }
 
-            alert("Logged out successfully.");
         } catch (err) {
             setError("Failed to log out.");
+        } finally {
+            Cookies.remove('refreshToken');
+            Cookies.remove('userId');
+            setToken(null);
         }
     };
 
+    //TODO WIP
     // Handle account deletion
     const handleDelete = async () => {
         try {
-            await api.delete("/account/");
             alert("Account deleted successfully.");
         } catch (err) {
             setError("Failed to delete account.");
         }
     };
 
+    //TODO WIP
     // Handle saving account updates
     const handleSave = async () => {
         try {
-            await api.put("/account/", accountInfo);
             alert("Account information updated successfully.");
         } catch (err) {
             setError("Failed to save account information.");

@@ -1,10 +1,9 @@
 import { jwtDecode, type JwtPayload } from 'jwt-decode';
 import Cookies from 'js-cookie';
-import { useAuth } from "./AuthContext";
-import { useNavigate } from 'react-router';
+//import { useAuth } from "./AuthContext";
+
 
 const clearTokens = (): void => {
-    const navigate = useNavigate();
     // Example using localStorage
     Cookies.remove('refreshToken');
     Cookies.remove('userId');
@@ -13,7 +12,7 @@ const clearTokens = (): void => {
     // Maybe redirect to login page or show an error
     console.error('Tokens cleared. Please log in again.');
     // Example redirect (in a browser environment)
-    navigate('/login');
+    window.location.href = '/login';
 };
 
 /**
@@ -53,9 +52,9 @@ const isTokenExpiring = (
  * Calls your refresh token API endpoint.
  * @returns A promise that resolves with new access and refresh tokens.
  */
-const callRefreshTokenApi = async (): Promise<{ accessToken: string|null|undefined; }> => {
+const callRefreshTokenApi = async (): Promise<{ token: string|null|undefined; }> => {
     try {
-        // Replace with your actual API call logic (e.g., using fetch or axios)
+        // Replace with your actual API call logic (e.g., using fetch or)
         const response = await fetch('/api/auth/refresh', {
             method: 'POST',
             headers: {
@@ -88,51 +87,56 @@ const callRefreshTokenApi = async (): Promise<{ accessToken: string|null|undefin
     }
 };
 
+interface ApiResponse {
+    jsonData: any;
+    token: string | null | undefined;
+}
 /**
  * Calls your /account/me API endpoint with the given access token.
- * @param accessToken The access token to use for authorization.
+ * @param token 
+ * @param endpoint 
+ * @param method 
+ * @param body 
  * @returns A promise that resolves with the account data.
  */
-const callApi = async (method: string, body: any|null): Promise<any> => {
+const CallApi = async (endpoint: string, method: string, token: string | null | undefined, body?: string | undefined): Promise<ApiResponse> => {
     try {
-        const { token, setToken } = useAuth();
+        let currentToken: string | null |undefined = token;
+        //const { token, setToken } = useAuth();
         if (isTokenExpiring(token))
         {
-            const newToken = await callRefreshTokenApi();
-            setToken(newToken);
+            const data = await callRefreshTokenApi();
+            currentToken = data.token;
         }
 
-        // Replace with your actual API call logic
-        const response = await fetch('/api/account/me', {
+        const response = await fetch(endpoint, {
             method: method,
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${currentToken}`,
                 'Content-Type': 'application/json',
             },
-            body: body.stringify({})
+            body: body
         });
 
         if (!response.ok) {
             // Handle API errors (e.g., access token invalid/expired for this specific call)
             // Note: If refresh worked, this 401 is less likely but possible.
             if (response.status === 401) {
-                console.error('/account/me API returned 401. Token might be invalid despite refresh.');
+                console.error(endpoint +' API returned 401. Token might be invalid despite refresh.');
                 // You might want to try refreshing again, or force logout depending on strategy
                 // For simplicity here, we'll just throw
-                throw new Error('Unauthorized access to /account/me');
+                clearTokens();
+                throw new Error('Unauthorized access to' + endpoint);
             }
-            throw new Error(`HTTP error! status: ${response.status} calling /account/me`);
+            throw new Error(`HTTP error! status: ${response.status} calling `+ endpoint);
         }
 
         const data = await response.json();
-        return data;
+        return { jsonData: data, token: currentToken};
     } catch (error) {
         console.error('Error fetching account data:', error);
         throw error; // Re-throw the error
     }
 };
 
-export default callApi;
-
-/**
- * Orchestrates the process: checks token, refreshes if needed, then calls 
+export default CallApi;

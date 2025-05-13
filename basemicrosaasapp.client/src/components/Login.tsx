@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router";
-//import axios from "axios";
-import Cookies from 'js-cookie';
 
 
 const Login: React.FC = () => {
@@ -26,12 +24,14 @@ const Login: React.FC = () => {
             if (!response.ok) {
                 //TODO Add proper status message
                 console.log("Login failed");
+
             }
             return response.json();
-        }).then((data: any) => {    
-            setToken(data.token);
-            Cookies.set('UserId', data.userId, { expires: 30 }); 
-            navigate('/app');
+        }).then((data: any) => {
+            if (data.token) {
+                setToken(data.token);
+                navigate('/app');
+            }
         });
         //console.log('Login attempt with:', { username });
     };
@@ -79,6 +79,9 @@ const Login: React.FC = () => {
                         </button>
                         <Link to="/register" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
                             Need to register?
+                        </Link>
+                        <Link to="/" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                           Home
                         </Link>
                     </div>
                 </form>

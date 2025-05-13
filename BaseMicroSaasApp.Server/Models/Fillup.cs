@@ -12,6 +12,7 @@ public class Fillup
     public decimal FuelAmount { get; set; }
     public decimal PricePerLiter { get; set; }
     public bool IsFullTank { get; set; }
+    public bool SkippedAFillUp { get; set; }
     public decimal TotalCost { get; set; }
     public DateTime Date { get; set; }
 
