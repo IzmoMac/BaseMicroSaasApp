@@ -64,7 +64,9 @@ export default function Trip() {
                                     }`}
                                 onClick={() => setTripType("personal")}
                             >
-                                <FaHome className="h-4 w-4" />  {/*Added Home Icon*/}
+                                <div className="h-4 w-4">
+                                <FaHome  />  
+                                </div>
                                 <span>Personal</span>
                             </button>
                             <button
@@ -76,7 +78,9 @@ export default function Trip() {
                                     }`}
                                 onClick={() => setTripType("work")}
                             >
-                                <FaBriefcase className="h-4 w-4" />  {/*Added Briefcase Icon*/}
+                                <div className="h-4 w-4">
+                                    <FaBriefcase />  {/*Added Briefcase Icon*/}
+                                </div>
                                 <span>Work</span>
                             </button>
                         </div>

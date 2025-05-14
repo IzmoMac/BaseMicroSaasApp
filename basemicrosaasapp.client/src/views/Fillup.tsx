@@ -115,7 +115,7 @@ export default function FillUp() {
                                         : "border-gray-300 dark:border-gray-500"
                                         }`}
                                 >
-                                    {isFullTank && <FaCheck className="w-3.5 h-3.5 text-white" />}
+                                    {isFullTank && <div className="w-3.5 h-3.5 text-white" > <FaCheck /> </div>}
                                 </div>
                                 <input
                                     type="checkbox"
@@ -140,7 +140,7 @@ export default function FillUp() {
                                         : "border-gray-300 dark:border-gray-500"
                                         }`}
                                 >
-                                    {skippedLastFillUp && <FaCheck className="w-3.5 h-3.5 text-white" />}
+                                    {skippedLastFillUp && <div className="w-3.5 h-3.5 text-white" > <FaCheck /> </div>}
                                 </div>
                                 <input
                                     type="checkbox"

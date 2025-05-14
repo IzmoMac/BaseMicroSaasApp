@@ -14,13 +14,16 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly TokenService _tokenService;
     private readonly ApplicationDbContext _dbContext;
+    private readonly IConfiguration _configuration
     private readonly string _refreshTokenCookieName = "refreshToken";
     private readonly string _userIdTokenCookieName = "userId";
-    public AuthController(UserManager<ApplicationUser> userManager, TokenService tokenService, ApplicationDbContext dbContext)
+    private readonly string _regTokenName = "RegisterToken";
+    public AuthController(UserManager<ApplicationUser> userManager, TokenService tokenService, ApplicationDbContext dbContext, IConfiguration configuration)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _dbContext = dbContext;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -50,7 +53,15 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest model)
     {
-        if (model.RegistrationToken != "1234")
+        if (string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
+        {
+            return BadRequest(new { message = "Username and password are required." });
+        }
+        if (_configuration[_regTokenName] == null)
+        {
+            return Unauthorized(new { mesage = "Error happened, try again later" });
+        }
+        if (model.RegistrationToken != _configuration[_regTokenName])
         {
             return Unauthorized(new { mesage = "Registarion token needed" });
         }

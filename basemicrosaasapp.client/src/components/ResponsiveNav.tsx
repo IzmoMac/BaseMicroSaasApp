@@ -1,4 +1,4 @@
-import { FaTachometerAlt, FaGasPump, FaUser, FaCar, FaTable } from "react-icons/fa";
+import { FaTachometerAlt, FaGasPump, FaUser, FaCar, /*FaTable*/ } from "react-icons/fa";
 import { NavLink, type NavLinkRenderProps } from 'react-router'
 
 const ResponsiveNav: React.FC = () => {
@@ -46,7 +46,9 @@ const ResponsiveNav: React.FC = () => {
                         }
                     >
                         <span className="flex items-center">
-                            <FaUser className="mr-2" />
+                            <div className="mr-2">
+                                <FaUser />
+                            </div>
                             Account
                         </span>
                     </NavLink>

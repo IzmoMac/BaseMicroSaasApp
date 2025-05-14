@@ -1,11 +1,11 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { useAuth } from "../context/AuthContext";
 
 const DebugLayout: React.FC = () => {
     const { token } = useAuth();
 
-    React.useEffect(() => {
+    useEffect(() => {
         const toggleDebugDiv = () => {
             const debugDiv = document.getElementById('debug-token-div');
             if (debugDiv) {
@@ -46,6 +46,6 @@ export default DebugLayout;
 // Extend the Window interface to include our new function for TypeScript
 declare global {
     interface Window {
-        toggleDebugToken: () => void;
+        toggleDebugToken?: () => void;
     }
 }
