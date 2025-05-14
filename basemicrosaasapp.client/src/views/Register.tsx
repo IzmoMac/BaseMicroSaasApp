@@ -47,7 +47,7 @@ const Register: React.FC = () => {
                             required
                         />
                     </div>
-                    <div className="mb-6">
+                    <div className="mb-4">
                         <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
                             Password
                         </label>
@@ -75,7 +75,7 @@ const Register: React.FC = () => {
                             required
                         />
                     </div>
-                    <div className="mb-2">
+                    <div className="mb-4">
                         <button
                             type="submit"
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -89,7 +89,7 @@ const Register: React.FC = () => {
                             Already have an account? Login here!
                         </Link>
                     </div>
-                    <div className="mb-2">
+                    <div className="">
                         <Link to="/" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
                             Home
                         </Link>

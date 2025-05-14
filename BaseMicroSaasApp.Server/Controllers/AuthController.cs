@@ -149,11 +149,39 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Delete()
     {
+        var userId = User?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        if (string.IsNullOrEmpty(userId)) { userId = User?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value; }
+        if (string.IsNullOrEmpty(userId)) { return Unauthorized(); }
+        // Fetch the user from the database
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) { return NotFound(new { message = "User not found in the database" }); }
 
+        var result = await _userManager.DeleteAsync(user);
+        if (result.Succeeded)
+        {
+            Response.Cookies.Delete(_refreshTokenCookieName);
+            Response.Cookies.Delete(_userIdTokenCookieName);
 
-        Response.Cookies.Delete(_refreshTokenCookieName);
-        Response.Cookies.Delete(_userIdTokenCookieName);
-        return Ok(new { message = "Account deleted succesfully." });
+            var activeTokens = await _dbContext.RefreshTokens
+                                .Where(rt => rt.ApplicationUserId == user.Id).ToListAsync();
+            activeTokens = activeTokens.Where(rt => rt.IsActive).ToList();
+
+            if (activeTokens.Count == 0)
+            {
+                return Ok(new { Status = "Success", Message = "Account deleted succesfully" });
+            }
+
+            foreach (var token in activeTokens)
+            {
+                token.Revoked = DateTime.UtcNow;
+            }
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(new { message = "Account deleted succesfully." });
+        } else
+        {
+            return BadRequest(new { message = "Failed to delete account." });
+        }
     }
 
     [HttpPost("update-password")]
@@ -175,6 +203,9 @@ public class AuthController : ControllerBase
         var result = _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
         if (result.IsCompletedSuccessfully)
         {
+            Response.Cookies.Delete(_refreshTokenCookieName);
+            Response.Cookies.Delete(_userIdTokenCookieName);
+
             var activeTokens = await _dbContext.RefreshTokens
                                 .Where(rt => rt.ApplicationUserId == user.Id).ToListAsync();
             activeTokens = activeTokens.Where(rt => rt.IsActive).ToList();
@@ -189,14 +220,11 @@ public class AuthController : ControllerBase
                 token.Revoked = DateTime.UtcNow;
             }
             await _dbContext.SaveChangesAsync();
-
-            Response.Cookies.Delete(_refreshTokenCookieName);
-            Response.Cookies.Delete(_userIdTokenCookieName);
             return Ok(new { Status = "Success", Message = "Password updated successfully. All refresh tokens revoked." });
         }
         else
         {
-            return BadRequest(new { Status="Failed", message = "Failed to update password." });
+            return BadRequest(new { Status = "Failed", message = "Failed to update password." });
         }
     }
 
@@ -210,67 +238,6 @@ public class AuthController : ControllerBase
             Expires = DateTimeOffset.UtcNow.AddDays(7), // Set appropriate expiry
         };
     }
-
-
-    ////TODO ALSO CHECK FOR POTENTIAL SECURITY FLAWS BEFORE IMPLMEITNG
-    //// --- Optional: Revoke Endpoint ---
-    //// This endpoint allows a user to revoke a specific refresh token (e.g., "logout from this device")
-    //// or revoke all their refresh tokens (e.g., "logout from all devices").
-    //[Authorize] // Requires a valid access token to call this
-    //[HttpPost("revoke")]
-    //public async Task<IActionResult> Revoke([FromBody] RefreshRequest request)
-    //{
-    //    // Get the user ID from the valid access token claim
-    //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    //    if (userId == null)
-    //    {
-    //        return Unauthorized(); // Should not happen if [Authorize] works
-    //    }
-
-    //    var refreshTokenString = request.RefreshToken;
-
-    //    // Find the token *and* ensure it belongs to the current user
-    //    var refreshToken = await _context.RefreshTokens
-    //        .FirstOrDefaultAsync(rt => rt.Token == refreshTokenString && rt.ApplicationUserId == userId);
-
-    //    if (refreshToken == null || !refreshToken.IsActive)
-    //    {
-    //        // Token not found, doesn't belong to user, or already revoked
-    //        return BadRequest("Invalid or inactive refresh token.");
-    //    }
-
-    //    await _tokenService.RevokeRefreshToken(refreshTokenString);
-
-    //    return Ok(new { Status = "Success", Message = "Refresh token revoked." });
-    //}
-
-    //// --- Optional: Revoke All Tokens Endpoint ---
-    //[Authorize]
-    //[HttpPost("revoke-all")]
-    //public async Task<IActionResult> RevokeAll()
-    //{
-    //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    //    if (userId == null) return Unauthorized();
-
-    //    var activeTokens = await _context.RefreshTokens
-    //        .Where(rt => rt.ApplicationUserId == userId && rt.IsActive)
-    //        .ToListAsync();
-
-    //    if (!activeTokens.Any())
-    //    {
-    //        return Ok(new { Status = "Success", Message = "No active tokens found to revoke." });
-    //    }
-
-    //    foreach (var token in activeTokens)
-    //    {
-    //        token.Revoked = DateTime.UtcNow;
-    //    }
-    //    await _context.SaveChangesAsync();
-
-    //    return Ok(new { Status = "Success", Message = "All refresh tokens revoked." });
-    //}
-
-
 }
 
 public class RegisterRequest

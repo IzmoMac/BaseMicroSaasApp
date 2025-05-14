@@ -1,5 +1,4 @@
-import React from 'react';
-import { FaTachometerAlt, FaGasPump, FaUser, FaCar } from "react-icons/fa";
+import { FaTachometerAlt, FaGasPump, FaUser, FaCar, FaTable } from "react-icons/fa";
 import { NavLink, type NavLinkRenderProps } from 'react-router'
 
 const ResponsiveNav: React.FC = () => {
@@ -8,6 +7,7 @@ const ResponsiveNav: React.FC = () => {
         { href: '/app', name: 'Dashboard', icon: <FaTachometerAlt /> },
         { href: '/app/trip', name: 'Trip', icon: <FaCar /> },
         { href: '/app/fillup', name: 'Fill-up', icon: <FaGasPump /> },
+        //{ href: '/app/data', name: 'Data', icon: <FaTable /> },
         { href: '/app/account', name: 'Account', icon: <FaUser /> },
     ];
 

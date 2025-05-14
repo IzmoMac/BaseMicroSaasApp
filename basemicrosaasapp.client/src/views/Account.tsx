@@ -113,57 +113,61 @@ const Account: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-800 mb-4">Account</h1>
             {loading && <p className="text-blue-500">Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
-            <div className="space-y-4 mb-2">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">
+            <div className="mb-6">
+                <div className="flex">
+                    <div className="text-md font-bold text-gray-700 mr-2">
                         Username/Email:
-                    </label>
-                    <div className="mt-1 block w-full px-3 py-2 text-gray-800 sm:text-sm">
+                    </div>
+                    <div className="text-gray-800 text-md">
                         {accountInfo.username}
                     </div>
                 </div>
             </div>
-            <div className="mb-4">
-                <label htmlFor="oldPassword" className="block text-gray-700 text-sm font-bold mb-2">
-                    Old Password
-                </label>
-                <input
-                    type="password"
-                    id="oldPassword"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Enter your old password"
-                    value={oldPassword}
-                    onChange={(e) => setOldPassword(e.target.value)}
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label htmlFor="newPassword" className="block text-gray-700 text-sm font-bold mb-2">
-                    New Password
-                </label>
-                <input
-                    type="password"
-                    id="newPassword"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Enter your new password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label htmlFor="reNewPassword" className="block text-gray-700 text-sm font-bold mb-2">
-                    New Password again
-                </label>
-                <input
-                    type="password"
-                    id="reNewPassword"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Enter your new password again"
-                    value={reNewPassword}
-                    onChange={(e) => setReNewPassword(e.target.value)}
-                    required
-                />
+
+            <div>
+                <h2 className="mb-4 text-md font-bold text-gray-700">Change Password</h2>
+                <div className="mb-4">
+                    <label htmlFor="oldPassword" className="block text-gray-700 text-sm font-medium mb-2">
+                        Old Password
+                    </label>
+                    <input
+                        type="password"
+                        id="oldPassword"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Enter your old password"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="newPassword" className="block text-gray-700 text-sm font-medium mb-2">
+                        New Password
+                    </label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Enter your new password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="reNewPassword" className="block text-gray-700 text-sm font-medium mb-2">
+                        New Password again
+                    </label>
+                    <input
+                        type="password"
+                        id="reNewPassword"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Enter your new password again"
+                        value={reNewPassword}
+                        onChange={(e) => setReNewPassword(e.target.value)}
+                        required
+                    />
+                </div>
             </div>
             <div className="mt-6 flex space-x-4">
 

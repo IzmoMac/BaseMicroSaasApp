@@ -12,6 +12,7 @@ import LandingPage from './views/LandingPage';
 import Login from './views/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './views/Register';
+import Data from './views/Data';
 import './main.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
                             <Route path="fillup" element={<Fillup />} />
                             <Route path="trip" element={<Trip />} />
                             <Route path="account" element={<Account />} />
+                            <Route path="data" element={<Data/>} />
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                         <Route path="login" element={<Login />} />

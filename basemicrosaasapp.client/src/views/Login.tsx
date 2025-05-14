@@ -24,7 +24,7 @@ const Login: React.FC = () => {
             if (!response.ok) {
                 //TODO Add proper status message
                 console.log("Login failed");
-
+                alert("Login failed, try again.")
             }
             return response.json();
         }).then((data: any) => {
