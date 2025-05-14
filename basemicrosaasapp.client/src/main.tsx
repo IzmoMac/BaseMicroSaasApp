@@ -1,26 +1,25 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router";
-import Dashboard from './Dashboard.tsx';
-import Fillup from './Fillup.tsx';
-import Trip from './Trip.tsx';
-import Account from './components/Account.tsx';
+import Dashboard from './views/Dashboard.tsx';
+import Fillup from './views/Fillup.tsx';
+import Trip from './views/Trip.tsx';
+import Account from './views/Account.tsx';
 import AppLayout from './components/AppLayout.tsx';
-import { AuthProvider } from './components/AuthContext.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
 import DebugLayout from './components/DebugLayout.tsx';
-import LandingPage from './components/LandingPage.tsx';
-import Login from './components/Login.tsx';
+import LandingPage from './views/LandingPage.tsx';
+import Login from './views/Login.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
-import Register from './components/Register.tsx';
-import './index.css';
+import Register from './views/Register.tsx';
+import './main.css';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<DebugLayout/>}>
-                    {/*<Route element={<DebugLayout { />}>*/}
+                    {/*<Route path="/" element={<DebugLayout/>}>*/}
                         <Route path="/" element={<LandingPage />} />
                         <Route path="app" element={
                             <ProtectedRoute>
@@ -35,7 +34,7 @@ createRoot(document.getElementById('root')!).render(
                         </Route>
                         <Route path="login" element={<Login />} />
                         <Route path="register" element={<Register />} />
-                    </Route>
+                    {/*</Route>*/}
                 </Routes>
             </ BrowserRouter>
         </AuthProvider>

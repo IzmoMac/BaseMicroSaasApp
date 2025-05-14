@@ -39,9 +39,9 @@ public class TripController : Controller
             User = user,
         };
 
+        //TODO Add validation
         _context.Trips.Add(newTrip);
         await _context.SaveChangesAsync();
-        //TODO Add validation and save to database
-        return Ok("Data Submitted Successfully");
+        return Json(new { message = "success" });
     }
 }

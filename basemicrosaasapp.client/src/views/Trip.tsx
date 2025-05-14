@@ -1,6 +1,8 @@
 import { FaHome, FaBriefcase } from "react-icons/fa";
 
 import { useState } from "react";
+import CallApi from "../api/ApiHelper";
+import { useAuth } from "../context/AuthContext";
 
 export default function Trip() {
     const [tripType, setTripType] = useState<"personal" | "work">("personal");
@@ -8,6 +10,7 @@ export default function Trip() {
     const [odometerReading, setOdometerReading] = useState("");
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const [notes, setNotes] = useState("");
+    const { token, setToken } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -21,25 +24,18 @@ export default function Trip() {
         };
 
         try {
-            const response = await fetch('/api/trip/record', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
 
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result.message);
+            const response = await CallApi('/api/trip/record', 'POST', token, JSON.stringify(formData));
+            if (token !== response.token) { setToken(response.token); }
 
-                // Reset the form
-                setOdometerReading("");
+            const result = response.jsonData;
+            console.log(result.message);
 
-                setDate(new Date().toISOString().split("T")[0]);
-            } else {
-                console.error('Failed to submit form');
-            }
+            setTripDistance("");
+            setOdometerReading("");
+            setDate(new Date().toISOString().split("T")[0]);
+            setNotes("");
+            alert("Saved Succesfully");
         } catch (error) {
             console.error('Error:', error);
         }

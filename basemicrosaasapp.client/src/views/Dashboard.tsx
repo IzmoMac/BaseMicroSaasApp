@@ -1,4 +1,4 @@
-import DashboardStats from "./components/dashboard-stats"
+import DashboardStats from "../components/dashboard-stats"
 import "./dashboard.css"
 function Dashboard() {
     return (

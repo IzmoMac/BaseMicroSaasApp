@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router';
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 
 const DebugLayout: React.FC = () => {

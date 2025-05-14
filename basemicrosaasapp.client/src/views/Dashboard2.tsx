@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { StatsBoard } from "./components/stats-board"
-import CallApi from "./components/ApiHelper"
-import { useAuth } from "./components/AuthContext";
+import { StatsBoard } from "../components/stats-board"
+import CallApi from "../api/ApiHelper"
+import { useAuth } from "../context/AuthContext";
 //import { FaChevronDown } from 'react-icons/fa';
 interface StatsMonth {
     TotalDistance: number;

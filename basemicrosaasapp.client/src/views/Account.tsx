@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "./AuthContext";
-import CallApi from "./ApiHelper";
+import { useAuth } from "../context/AuthContext";
+import CallApi from "../api/ApiHelper";
 import Cookies from 'js-cookie';
 const Account: React.FC = () => {
     const [accountInfo, setAccountInfo] = useState({

@@ -1,9 +1,9 @@
 import type React from "react";
-import { useAuth } from "./components/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
-import CallApi from "./components/ApiHelper";
-//import api from './components/api';
+import CallApi from "../api/ApiHelper";
+
 export default function FillUp() {
     const [odometerReading, setOdometerReading] = useState("");
     const [fuelAmount, setFuelAmount] = useState("");
@@ -40,20 +40,9 @@ export default function FillUp() {
         };
 
         try {
-            // Assuming your axios instance is exported as 'api'
-            //const response = await api.post('/api/fillup/record', formData);
-
             const response = await CallApi('/api/fillup/record', 'POST', token, JSON.stringify(formData));
             if (token !== response.token) { setToken(response.token); }
 
-            // Axios considers any status code within the 2xx range as successful by default
-            // If you need to handle specific status codes differently, you can check response.status
-            // For this case, a successful Axios request means the request completed without network errors
-            // and the server responded. The success of the operation is usually determined by the server's
-            // response data or status code if you need to check beyond the 2xx range.
-
-            // If the request was successful (status in the 2xx range)
-            // Axios response data is directly available in response.data
             const result = response.jsonData;
             console.log(result.message);
 
@@ -65,6 +54,7 @@ export default function FillUp() {
             setSkippedLastFillUp(false);
             setTotalCost("0.00");
             setDate(new Date().toISOString().split("T")[0]);
+            alert("Saved Succesfully");
         } catch (error) {
             console.error('Error:', error);
         }

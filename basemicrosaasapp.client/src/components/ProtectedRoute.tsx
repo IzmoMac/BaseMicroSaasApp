@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import { useAuth } from "./AuthContext"; // Adjust path as needed
+import { useAuth } from "../context/AuthContext";
 import type { ReactNode } from "react";
 
 const LoadingSpinner = () => <div>Loading...</div>;
