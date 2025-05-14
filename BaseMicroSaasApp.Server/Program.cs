@@ -42,7 +42,9 @@ namespace BaseMicroSaasApp.Server
             }).AddJwtBearer(options =>
             {
                 //TODO Set to true in production
+#if DEBUG
                 options.RequireHttpsMetadata = false;
+#endif
                 options.SaveToken = true; // Save the token in the AuthenticationProperties
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
@@ -94,17 +96,20 @@ namespace BaseMicroSaasApp.Server
                 db.Database.Migrate();
             }
 
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            //app.UseDefaultFiles();
+            //app.UseStaticFiles();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+            } else
+            {
+                app.UseHttpsRedirection();
             }
 
-            app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
