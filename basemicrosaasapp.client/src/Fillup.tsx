@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { FaCheck } from "react-icons/fa";
 import CallApi from "./components/ApiHelper";
 //import api from './components/api';
-//import { HiHome, HiBriefcase } from 'react-icons/hi';
 export default function FillUp() {
     const [odometerReading, setOdometerReading] = useState("");
     const [fuelAmount, setFuelAmount] = useState("");

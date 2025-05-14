@@ -102,17 +102,6 @@ export default function Trip() {
                             required
                         />
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="trip" className="text-sm font-medium">
-                            Trip Distance
-                        </label>
-                        <input
-                            type="number"
-                            id="trip"
-                            placeholder="e.g. 100"
-                            className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
 
                     {/* Odometer Reading */}
                     <div className="flex flex-col gap-2">

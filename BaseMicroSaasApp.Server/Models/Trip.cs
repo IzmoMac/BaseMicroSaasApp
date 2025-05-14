@@ -7,7 +7,7 @@ public class Trip
 {
     [Key]
     public long Id { get; set; }
-    public TripType TripType { get; set; }
+    public string TripType { get; set; }
     public decimal TripDistance { get; set; }
     public decimal OdometerReading { get; set; }
     public DateTime Date { get; set; }
@@ -18,9 +18,4 @@ public class Trip
 
     // Navigation property
     public ApplicationUser User { get; set; }
-}
-public enum TripType
-{
-    Personal,
-    Home
 }

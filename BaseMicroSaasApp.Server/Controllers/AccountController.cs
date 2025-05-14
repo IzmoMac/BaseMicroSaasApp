@@ -79,8 +79,8 @@ public class AccountController : Controller
             return NotFound(new { message = "No data found" });
         }
         var totalDistance = GetTotalDistance(fs, ts);
-        var totalWork = ts.Where(t => t.TripType == TripType.Home).Sum(t => t.TripDistance);
-        var totalPersonal = ts.Where(t => t.TripType == TripType.Personal).Sum(t => t.TripDistance);
+        var totalWork = ts.Where(t => t.TripType == "home").Sum(t => t.TripDistance);
+        var totalPersonal = ts.Where(t => t.TripType == "personal").Sum(t => t.TripDistance);
 
 
         var orderedFillups = fs.OrderBy(fs => fs.Date).ToList();

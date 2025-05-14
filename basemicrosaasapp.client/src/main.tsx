@@ -4,14 +4,15 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Dashboard from './Dashboard.tsx';
 import Fillup from './Fillup.tsx';
 import Trip from './Trip.tsx';
+import Account from './components/Account.tsx';
 import AppLayout from './components/AppLayout.tsx';
 import { AuthProvider } from './components/AuthContext.tsx';
-import ProtectedRoute from './components/ProtectedRoute.tsx';
-import './index.css';
-import Login from './components/Login.tsx';
-import LandingPage from './components/LandingPage.tsx';
-import Account from './components/Account.tsx';
 import DebugLayout from './components/DebugLayout.tsx';
+import LandingPage from './components/LandingPage.tsx';
+import Login from './components/Login.tsx';
+import ProtectedRoute from './components/ProtectedRoute.tsx';
+import Register from './components/Register.tsx';
+import './index.css';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -33,7 +34,7 @@ createRoot(document.getElementById('root')!).render(
                             <Route path="*" element={<Dashboard />} />
                         </Route>
                         <Route path="login" element={<Login />} />
-                        <Route path="register" element={<div>register page</div>} />
+                        <Route path="register" element={<Register />} />
                     </Route>
                 </Routes>
             </ BrowserRouter>

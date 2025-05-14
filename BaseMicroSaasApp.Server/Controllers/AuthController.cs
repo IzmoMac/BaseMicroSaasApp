@@ -2,6 +2,8 @@ using BaseMicroSaasApp.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace BaseMicroSaasApp.Server.Controllers;
 
@@ -17,13 +19,6 @@ public class AuthController : ControllerBase
     {
         _userManager = userManager;
         _tokenService = tokenService;
-    }
-
-    [Authorize]
-    [HttpGet("test")]
-    public IActionResult Index()
-    {
-        return Ok("AuthController is working");
     }
 
     [HttpPost("login")]
@@ -47,21 +42,20 @@ public class AuthController : ControllerBase
         return Unauthorized();
     }
 
+    //TODO ISMO: This is a temporary solution, we should implement a proper registration process.
+    //For now we do not allow users to register themselves, basically this allows other users to register new users, but that is no con
+    //[Authorize]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest model)
     {
-        var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+        if (model.RegistrationToken != "1234")
+        {
+            return Unauthorized(new {mesage = "Registarion token needed"});
+        }
+        var user = new ApplicationUser { UserName = model.Username, Email = model.Username };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            //var refreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id)!;
-
-            ////Response.Cookies.Append(_refreshTokenCookieName, refreshToken.Token, GetRefreshCookieOptions());
-
-            //return Ok(new AuthResponse
-            //{
-            //    Token = _tokenService.CreateToken(user)
-            //});
             return Ok(new { message = "User registered successfully." });
         }
 
@@ -222,7 +216,7 @@ public class RegisterRequest
 {
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
+    public string RegistrationToken { get; set; } = string.Empty;
 }
 public class LoginRequest
 {
