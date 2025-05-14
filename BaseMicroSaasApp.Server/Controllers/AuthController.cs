@@ -13,12 +13,14 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly TokenService _tokenService;
+    private readonly ApplicationDbContext _dbContext;
     private readonly string _refreshTokenCookieName = "refreshToken";
     private readonly string _userIdTokenCookieName = "userId";
-    public AuthController(UserManager<ApplicationUser> userManager, TokenService tokenService)
+    public AuthController(UserManager<ApplicationUser> userManager, TokenService tokenService, ApplicationDbContext dbContext)
     {
         _userManager = userManager;
         _tokenService = tokenService;
+        _dbContext = dbContext;
     }
 
     [HttpPost("login")]
@@ -50,7 +52,7 @@ public class AuthController : ControllerBase
     {
         if (model.RegistrationToken != "1234")
         {
-            return Unauthorized(new {mesage = "Registarion token needed"});
+            return Unauthorized(new { mesage = "Registarion token needed" });
         }
         var user = new ApplicationUser { UserName = model.Username, Email = model.Username };
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -143,6 +145,61 @@ public class AuthController : ControllerBase
         Response.Cookies.Delete(_userIdTokenCookieName);
         return Unauthorized(new { message = "Invalid refresh token." });
     }
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> Delete()
+    {
+
+
+        Response.Cookies.Delete(_refreshTokenCookieName);
+        Response.Cookies.Delete(_userIdTokenCookieName);
+        return Ok(new { message = "Account deleted succesfully." });
+    }
+
+    [HttpPost("update-password")]
+    [Authorize]
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest model)
+    {
+        if (model.NewPassword != model.ReNewPassword)
+        {
+            return BadRequest(new { message = "New password and confirmation do not match." });
+        }
+        var userId = User?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+        if (string.IsNullOrEmpty(userId)) { userId = User?.Claims.FirstOrDefault(c => c.Type == "sub")?.Value; }
+        if (string.IsNullOrEmpty(userId)) { return Unauthorized(); }
+        // Fetch the user from the database
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) { return NotFound(new { message = "User not found in the database" }); }
+
+
+        var result = _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+        if (result.IsCompletedSuccessfully)
+        {
+            var activeTokens = await _dbContext.RefreshTokens
+                                .Where(rt => rt.ApplicationUserId == user.Id).ToListAsync();
+            activeTokens = activeTokens.Where(rt => rt.IsActive).ToList();
+
+            if (activeTokens.Count == 0)
+            {
+                return Ok(new { Status = "Success", Message = "Password updated successfully. No active tokens found to revoke." });
+            }
+
+            foreach (var token in activeTokens)
+            {
+                token.Revoked = DateTime.UtcNow;
+            }
+            await _dbContext.SaveChangesAsync();
+
+            Response.Cookies.Delete(_refreshTokenCookieName);
+            Response.Cookies.Delete(_userIdTokenCookieName);
+            return Ok(new { Status = "Success", Message = "Password updated successfully. All refresh tokens revoked." });
+        }
+        else
+        {
+            return BadRequest(new { Status="Failed", message = "Failed to update password." });
+        }
+    }
+
     private static CookieOptions GetCookieOptions()
     {
         return new CookieOptions
@@ -153,6 +210,8 @@ public class AuthController : ControllerBase
             Expires = DateTimeOffset.UtcNow.AddDays(7), // Set appropriate expiry
         };
     }
+
+
     ////TODO ALSO CHECK FOR POTENTIAL SECURITY FLAWS BEFORE IMPLMEITNG
     //// --- Optional: Revoke Endpoint ---
     //// This endpoint allows a user to revoke a specific refresh token (e.g., "logout from this device")
@@ -210,6 +269,8 @@ public class AuthController : ControllerBase
 
     //    return Ok(new { Status = "Success", Message = "All refresh tokens revoked." });
     //}
+
+
 }
 
 public class RegisterRequest
@@ -222,4 +283,11 @@ public class LoginRequest
 {
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+}
+
+public class UpdatePasswordRequest
+{
+    public string OldPassword { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
+    public string ReNewPassword { get; set; } = string.Empty;
 }

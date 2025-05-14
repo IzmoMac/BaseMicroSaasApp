@@ -3,6 +3,7 @@ import { FaHome, FaBriefcase } from "react-icons/fa";
 import { useState } from "react";
 import CallApi from "../api/ApiHelper";
 import { useAuth } from "../context/AuthContext";
+import React from "react";
 
 export default function Trip() {
     const [tripType, setTripType] = useState<"personal" | "work">("personal");
@@ -102,7 +103,7 @@ export default function Trip() {
                     {/* Odometer Reading */}
                     <div className="flex flex-col gap-2">
                         <label htmlFor="odometer" className="text-sm font-medium">
-                            Odometer Reading (Optional)
+                            Odometer Reading
                         </label>
                         <input
                             type="number"

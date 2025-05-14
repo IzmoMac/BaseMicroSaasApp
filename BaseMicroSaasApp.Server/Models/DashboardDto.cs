@@ -2,9 +2,13 @@
 
 public class DashBoard
 {
-    public Dictionary<(int, int), StatsMonth> Stats { get; set; } = new();
+    public Dictionary<int, StatsY> StatsY { get; set; } = new();
 }
-public class StatsMonth
+public class StatsY
+{
+    public Dictionary<int, StatsM> StatsM { get; set; } = new();
+}
+public class StatsM
 {
     public int TotalDistance { get; set; }
     public decimal TotalFuelCost { get; set; }

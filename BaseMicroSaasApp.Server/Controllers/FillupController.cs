@@ -43,6 +43,6 @@ public class FillupController : Controller
         _context.Fillups.Add(newFU);
         await _context.SaveChangesAsync();
         //TODO Add validation and save to database
-        return Ok("Data Submitted Successfully");
+        return Json(new { message = "success" });
     }
 }

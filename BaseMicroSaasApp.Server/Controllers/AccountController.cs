@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BaseMicroSaasApp.Server.Controllers;
 
@@ -145,7 +147,14 @@ public class AccountController : Controller
         decimal totalFuelCost = fs.Sum(f => f.TotalCost);
         decimal averagePricePerLitre = totalFuelCost / fs.Sum(f => f.FuelAmount);
 
-        var statsMonth = new StatsMonth()
+ 
+        
+        var dashBoard = new DashBoard();
+        var statsYear = new StatsY()
+        {
+            StatsM = []
+        };
+        var statsMonth = new StatsM()
         {
             AverageFuelEconomy = averageTotalFuelEconomy,
             TotalDistance = (int)totalDistance,
@@ -154,8 +163,8 @@ public class AccountController : Controller
             PersonalDistance = totalPersonal,
             WorkDistance = totalWork,
         };
-        var dashBoard = new DashBoard();
-        dashBoard.Stats.Add((0, 0), statsMonth);
+        statsYear.StatsM.Add(0, statsMonth);
+        dashBoard.StatsY.Add(0, statsYear);       
 
         return Json(dashBoard);
     }

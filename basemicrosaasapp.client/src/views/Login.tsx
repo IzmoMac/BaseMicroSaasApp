@@ -12,7 +12,7 @@ const Login: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        //const response =
+        //const response =  
         fetch("/api/auth/login", {
             method: "POST",
             headers: {
