@@ -14,7 +14,7 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly TokenService _tokenService;
     private readonly ApplicationDbContext _dbContext;
-    private readonly IConfiguration _configuration
+    private readonly IConfiguration _configuration;
     private readonly string _refreshTokenCookieName = "refreshToken";
     private readonly string _userIdTokenCookieName = "userId";
     private readonly string _regTokenName = "RegisterToken";
