@@ -65,7 +65,7 @@ export default function FillUp() {
                 <h1 className="text-2xl font-bold">Fill-up</h1>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow dark:text-gray-200">
                 <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                     {/* Odometer Reading */}
                     <div className="flex flex-col gap-2">

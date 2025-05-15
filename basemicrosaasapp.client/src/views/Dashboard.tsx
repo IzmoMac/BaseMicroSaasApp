@@ -42,20 +42,21 @@ const dummyDashboardData: DashBoard = {
 const Dashboard: React.FC = () => {
     const { setToken, token } = useAuth();
     const [dashboardData, setDashboardData] = useState<DashBoard | null>(null);
-   /* const [usingDummy, setUsingDummy] = useState(false);*/
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             const response = await CallApi("/api/account/dashboard", 'GET', token);
             if (token !== response.token) { setToken(response.token); }
             setDashboardData(response.jsonData as DashBoard);
+            setLoading(false);
         };
         fetchData();
     }, [token, setToken]);
 
     // Use dummy data if dashboardData is not available
     const dataToShow = dashboardData ?? dummyDashboardData;
-    const showDummyBar = !dashboardData;
+    const showDummyBar = !dashboardData && !loading;
 
     // Get the first year and month keys
     const yearKey = Object.keys(dataToShow.statsY)[0];

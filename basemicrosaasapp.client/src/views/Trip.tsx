@@ -52,7 +52,7 @@ export default function Trip() {
                 <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
 
                     {/* Trip Type Selector */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 dark:text-gray-200">
                         <label className="text-sm font-medium">Trip Type</label>
                         <div className="flex p-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
                             <button
@@ -67,7 +67,7 @@ export default function Trip() {
                                 <div className="h-4 w-4">
                                 <FaHome  />  
                                 </div>
-                                <span>Personal</span>
+                                <span >Personal</span>
                             </button>
                             <button
                                 type="button"
@@ -88,7 +88,7 @@ export default function Trip() {
 
 
                     {/* Trip Distance */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 dark:text-gray-200">
                         <label htmlFor="trip" className="text-sm font-medium">
                             Trip Distance
                         </label>
@@ -105,7 +105,7 @@ export default function Trip() {
                     </div>
 
                     {/* Odometer Reading */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 dark:text-gray-200">
                         <label htmlFor="odometer" className="text-sm font-medium">
                             Odometer Reading
                         </label>
@@ -122,7 +122,7 @@ export default function Trip() {
                     </div>
 
                     {/* Date */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 dark:text-gray-200">
                         <label htmlFor="date" className="text-sm font-medium">
                             Date
                         </label>
@@ -140,7 +140,7 @@ export default function Trip() {
                     </div>
 
                     {/*Notes Section */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 dark:text-gray-200">
                         <label htmlFor="notes" className="text-sm font-medium">
                             Notes (Optional)
                         </label>
