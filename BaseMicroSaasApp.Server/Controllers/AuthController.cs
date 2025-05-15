@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
+using System.Text.Json;
 
 namespace BaseMicroSaasApp.Server.Controllers;
 
@@ -59,11 +60,11 @@ public class AuthController : ControllerBase
         }
         if (_configuration[_regTokenName] == null)
         {
-            return Unauthorized(new { mesage = "Error happened, try again later" });
+            return Unauthorized(new { message = "Error happened, try again later" });
         }
         if (model.RegistrationToken != _configuration[_regTokenName])
         {
-            return Unauthorized(new { mesage = "Registarion token needed" });
+            return Unauthorized(new { message = "Registarion token needed" });
         }
         var user = new ApplicationUser { UserName = model.Username, Email = model.Username };
         var result = await _userManager.CreateAsync(user, model.Password);
@@ -72,7 +73,7 @@ public class AuthController : ControllerBase
             return Ok(new { message = "User registered successfully." });
         }
 
-        return BadRequest(new { message = result.Errors });
+        return BadRequest(new { message = JsonSerializer.Serialize(result.Errors) });
     }
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()

@@ -11,22 +11,22 @@ const Register: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        //const response =
         fetch("/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username, password, RegistrationToken:regToken }),
-        }).then((response: any) => {
-            if (!response.ok) {
-                //TODO Add proper status message
-                console.log("Register failed");
-
+            body: JSON.stringify({ username, password, RegistrationToken: regToken }),
+        })
+        .then(async (response: Response) => {
+            const data = await response.json().catch(() => ({})); // Handle invalid JSON
+            if (data && data.message) {
+                alert(data.message);
+            } else if (!response.ok) {
                 alert("Register failed");
             } else {
-                alert("Register successfull");
-            navigate('/login');
+                alert("Register successful");
+                navigate('/login');
             }
         });
     };
