@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col gap-6 m-2">
             {showDummyBar && (
                 <div className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded mb-2 font-semibold text-center shadow">
-                    Dummy data
+                    Dummy data (You need to submit more data to see the real dashboard)
                 </div>
             )}
             <div className="flex justify-between items-center">
@@ -86,11 +86,11 @@ const Dashboard: React.FC = () => {
 
             {/* PERSONAL Stats Board */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow">
-                <h2 className="text-lg font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">PERSONAL</h2>
+                <h2 className="text-lg font-bold dark:text-gray-200 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">PERSONAL</h2>
                 <div className="flex flex-col gap-4">
                     <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                        <h3 className="text-xs text-gray-500 dark:text-gray-400 uppercase mb-1">Total Distance</h3>
-                        <p className="text-xl font-semibold">
+                        <h3 className="text-xs text-gray-400 dark:text-gray-400 uppercase mb-1">Total Distance</h3>
+                        <p className="text-xl font-semibold text-gray-400">
                             {stats.personalDistance} <span className="text-sm">km</span>
                         </p>
                     </div>
@@ -99,11 +99,11 @@ const Dashboard: React.FC = () => {
 
             {/* WORK Stats Board */}
             <div className="bg-white dark:bg-gray-800 rounded-lg p-5 shadow">
-                <h2 className="text-lg font-bold mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">WORK</h2>
+                <h2 className="text-lg font-bold dark:text-gray-200 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">WORK</h2>
                 <div className="flex flex-col gap-4">
                     <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                        <h3 className="text-xs text-gray-500 dark:text-gray-400 uppercase mb-1">Total Distance</h3>
-                        <p className="text-xl font-semibold">
+                        <h3 className="text-xs text-gray-400 dark:text-gray-400 uppercase mb-1">Total Distance</h3>
+                        <p className="text-xl font-semibold text-gray-400">
                             {stats.workDistance} <span className="text-sm">km</span>
                         </p>
                     </div>
