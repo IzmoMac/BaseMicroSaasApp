@@ -72,7 +72,7 @@ public class AuthController : ControllerBase
             return Ok(new { message = "User registered successfully." });
         }
 
-        return BadRequest(result.Errors);
+        return BadRequest(new { message = result.Errors });
     }
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
@@ -179,7 +179,7 @@ public class AuthController : ControllerBase
 
             if (activeTokens.Count == 0)
             {
-                return Ok(new { Status = "Success", Message = "Account deleted succesfully" });
+                return Ok(new { Status = "Success", message = "Account deleted succesfully" });
             }
 
             foreach (var token in activeTokens)
@@ -223,7 +223,7 @@ public class AuthController : ControllerBase
 
             if (activeTokens.Count == 0)
             {
-                return Ok(new { Status = "Success", Message = "Password updated successfully. No active tokens found to revoke." });
+                return Ok(new { Status = "Success", message = "Password updated successfully. No active tokens found to revoke." });
             }
 
             foreach (var token in activeTokens)
@@ -231,7 +231,7 @@ public class AuthController : ControllerBase
                 token.Revoked = DateTime.UtcNow;
             }
             await _dbContext.SaveChangesAsync();
-            return Ok(new { Status = "Success", Message = "Password updated successfully. All refresh tokens revoked." });
+            return Ok(new { Status = "Success", message = "Password updated successfully. All refresh tokens revoked." });
         }
         else
         {

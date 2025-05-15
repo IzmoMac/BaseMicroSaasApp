@@ -109,8 +109,6 @@ namespace BaseMicroSaasApp.Server
                 app.UseHttpsRedirection();
             }
 
-                app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
 

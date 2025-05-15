@@ -17,13 +17,17 @@ const Register: React.FC = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ username, password, RegistrationToken:regToken }),
         }).then((response: any) => {
             if (!response.ok) {
                 //TODO Add proper status message
                 console.log("Register failed");
-            }
+
+                alert("Register failed");
+            } else {
+                alert("Register successfull");
             navigate('/login');
+            }
         });
     };
 

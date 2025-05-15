@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Dashboard</h1>
             </div>
-            <div>Loading...</div>;
+            <div>Not enough data to show the dasboard, please fill data</div>
         </div>
         )
     }
