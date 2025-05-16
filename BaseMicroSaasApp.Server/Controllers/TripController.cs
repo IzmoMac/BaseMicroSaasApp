@@ -60,7 +60,7 @@ public class TripController : Controller
         {
             TripType = form.TripType,
             TripDistance = form.TripDistance,
-            OdometerReading = form.OdometerReading,
+            OdometerReading = form.OdometerReading ?? 0,
             Notes = form.Notes,
             Date = form.Date,
             UserId = userId,

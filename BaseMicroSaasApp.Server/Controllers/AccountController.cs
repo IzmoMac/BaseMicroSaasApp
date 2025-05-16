@@ -46,7 +46,7 @@ public class AccountController : Controller
     {
         decimal? minFu = fillups.Min(f => f.OdometerReading);
         decimal? maxFu = fillups.Max(f => f.OdometerReading);
-        decimal? minTrip = trips.Min(t => t.OdometerReading);
+        decimal? minTrip = trips.Where(t => t.OdometerReading != 0).Min(t => t.OdometerReading);
         decimal? maxTrip = trips.Max(t => t.OdometerReading);
 
         var min = minFu < minTrip ? minFu : minTrip;

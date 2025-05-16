@@ -107,7 +107,7 @@ export default function Trip() {
                     {/* Odometer Reading */}
                     <div className="flex flex-col gap-2 dark:text-gray-200">
                         <label htmlFor="odometer" className="text-sm font-medium">
-                            Odometer Reading
+                            Odometer Reading (Optional)
                         </label>
                         <input
                             type="number"
@@ -117,7 +117,6 @@ export default function Trip() {
                             className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={odometerReading}
                             onChange={(e) => setOdometerReading(e.target.value)}
-                            required
                         />
                     </div>
 
@@ -158,7 +157,7 @@ export default function Trip() {
                         type="submit"
                         className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors duration-200"
                     >
-                        Save Fill-up
+                        Save Trip
                     </button>
                 </form>
             </div>
