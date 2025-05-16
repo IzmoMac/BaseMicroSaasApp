@@ -365,3 +365,6 @@ FodyWeavers.xsd
 /BaseMicroSaasApp.Server/mydb.db
 /BaseMicroSaasApp.Server/mydb.db-shm
 /BaseMicroSaasApp.Server/mydb.db-wal
+/mydb.db
+/mydb.db-shm
+/mydb.db-wal
