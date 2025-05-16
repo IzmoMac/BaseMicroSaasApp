@@ -41,3 +41,9 @@ jobs:
           rm -rf ${{ github.workspace }}/publish/wwwroot
           mkdir -p ${{ github.workspace }}/publish/wwwroot
           cp -r basemicrosaasapp.client/dist/* ${{ github.workspace }}/publish/wwwroot
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: publish
+          path: ${{ github.workspace }}/publish
