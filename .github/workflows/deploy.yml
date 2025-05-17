@@ -43,12 +43,12 @@ jobs:
       - name: Replace appsettings.json
         run: |
           # Stop the build if the production appsettings file doesn't exist
-          if [ ! -f /opt/app/appsettings.Production.json ]; then
+          if [ ! -f /opt/cartrack/appsettings.Production.json ]; then
             echo "Error: Production appsettings.json not found at /opt/app/appsettings.Production.json"
             exit 1
           fi
           # Replace appsettings.json in the server project with the production version
-          cp /opt/app/appsettings.Production.json BaseMicroSaasApp.Server/appsettings.json
+          cp /opt/cartrack/appsettings.Production.json BaseMicroSaasApp.Server/appsettings.json
           # Verify the file was copied
           ls -l BaseMicroSaasApp.Server/appsettings.json
 
