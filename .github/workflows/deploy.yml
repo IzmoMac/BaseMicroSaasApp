@@ -40,17 +40,30 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      - name: Replace appsettings.json
+        run: |
+          # Stop the build if the production appsettings file doesn't exist
+          if [ ! -f /opt/app/appsettings.Production.json ]; then
+            echo "Error: Production appsettings.json not found at /opt/app/appsettings.Production.json"
+            exit 1
+          fi
+          # Replace appsettings.json in the server project with the production version
+          cp /opt/app/appsettings.Production.json BaseMicroSaasApp.Server/appsettings.json
+          # Verify the file was copied
+          ls -l BaseMicroSaasApp.Server/appsettings.json
+
       - name: Publish
         run: dotnet publish -c Release -o ${{ github.workspace }}/publish
 
-      - name: Build React App
+      - name: Reload/Restart cartrack.service
         run: |
-          cd basemicrosaasapp.client
-          npm install
-          npm run build
-
-      - name: Move React Build Output
-        run: |
-          rm -rf ${{ github.workspace }}/publish/wwwroot
-          mkdir -p ${{ github.workspace }}/publish/wwwroot
-          cp -r basemicrosaasapp.client/dist/* ${{ github.workspace }}/publish/wwwroot
+          # Attempt to reload the service first (less disruptive)
+          sudo systemctl reload cartrack-app.service
+          if [ $? -ne 0 ]; then
+            echo "Reload failed, attempting restart..."
+            sudo systemctl restart cartrack-app.service
+            if [ $? -ne 0 ]; then
+              echo "Restart failed as well. Check system logs for errors."
+              exit 1
+            fi
+          fi
