@@ -58,12 +58,7 @@ jobs:
       - name: Reload/Restart cartrack.service
         run: |
           # Attempt to reload the service first (less disruptive)
-          sudo systemctl reload cartrack-app.service
+          sudo systemctl restart cartrack-app.service
           if [ $? -ne 0 ]; then
-            echo "Reload failed, attempting restart..."
-            sudo systemctl restart cartrack-app.service
-            if [ $? -ne 0 ]; then
-              echo "Restart failed as well. Check system logs for errors."
-              exit 1
-            fi
+            exit 1
           fi
