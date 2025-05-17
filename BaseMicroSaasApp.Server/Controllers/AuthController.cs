@@ -27,6 +27,12 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpGet("ping")]
+    public IActionResult Ping()
+    {
+        return Ok(new { message = "Pong" });
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
