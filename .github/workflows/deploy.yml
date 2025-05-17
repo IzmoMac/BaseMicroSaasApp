@@ -28,6 +28,12 @@ jobs:
         with:
           node-version: 22.x
           
+      - name: Clean and install dependencies
+        run: |
+          cd basemicrosaasapp.client
+          rm -rf node_modules package-lock.json
+          npm install
+        
       - name: Restore dependencies
         run: dotnet restore
 
