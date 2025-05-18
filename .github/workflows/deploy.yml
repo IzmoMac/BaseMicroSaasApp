@@ -52,20 +52,6 @@ jobs:
           # Verify the file was copied
           ls -l BaseMicroSaasApp.Server/appsettings.json
 
-      - name: Backup Database
-        run: |
-          # Get the current date in YYYY-MM-DD format
-          DATE=$(date +%Y-%m-%d)
-          # Define the database file path
-          DB_PATH="${{ github.workspace }}/publish/mydb.db"
-          # Define the backup file name
-          BACKUP_NAME="mydb_${DATE}.zip"
-          # Zip the database file
-          zip "$BACKUP_NAME" "$DB_PATH"
-          # Optionally, move the backup to a dedicated backup directory
-          mkdir -p /root/db_backups
-          mv "$BACKUP_NAME" /root/db_backups
-
       - name: Publish
         run: dotnet publish -c Release -o ${{ github.workspace }}/publish
 
