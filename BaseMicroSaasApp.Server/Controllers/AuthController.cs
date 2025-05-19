@@ -31,7 +31,7 @@ public class AuthController : ControllerBase
     [HttpGet("ping")]
     public IActionResult Ping()
     {
-        return Ok(new { message = "pong" });
+        return Ok(new { message = "pong." });
     }
 
     [HttpPost("login")]
