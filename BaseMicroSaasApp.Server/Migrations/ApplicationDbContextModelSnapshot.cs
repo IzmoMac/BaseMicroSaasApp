@@ -80,44 +80,6 @@ namespace BaseMicroSaasApp.Server.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("BaseMicroSaasApp.Server.Models.Fillup", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("FuelAmount")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsFullTank")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("OdometerReading")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("PricePerLiter")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("SkippedAFillUp")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("TotalCost")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Fillups");
-                });
-
             modelBuilder.Entity("BaseMicroSaasApp.Server.Models.RefreshToken", b =>
                 {
                     b.Property<long>("Id")
@@ -146,40 +108,6 @@ namespace BaseMicroSaasApp.Server.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("RefreshTokens");
-                });
-
-            modelBuilder.Entity("BaseMicroSaasApp.Server.Models.Trip", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("OdometerReading")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("TripDistance")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TripType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -310,33 +238,11 @@ namespace BaseMicroSaasApp.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BaseMicroSaasApp.Server.Models.Fillup", b =>
-                {
-                    b.HasOne("BaseMicroSaasApp.Server.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BaseMicroSaasApp.Server.Models.RefreshToken", b =>
                 {
                     b.HasOne("BaseMicroSaasApp.Server.Models.ApplicationUser", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BaseMicroSaasApp.Server.Models.Trip", b =>
-                {
-                    b.HasOne("BaseMicroSaasApp.Server.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

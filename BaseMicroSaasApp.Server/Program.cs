@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using BaseMicroSaasApp.Server.Models;
 using Microsoft.OpenApi.Models;
+using BaseMicroSaasApp.Server.Helpers;
 
 namespace BaseMicroSaasApp.Server
 {

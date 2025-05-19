@@ -1,13 +1,9 @@
-import { FaTachometerAlt, FaGasPump, FaUser, FaCar, /*FaTable*/ } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import { NavLink, type NavLinkRenderProps } from 'react-router'
 
 const ResponsiveNav: React.FC = () => {
     // Example navigation links
     const navLinks = [
-        { href: '/app', name: 'Dashboard', icon: <FaTachometerAlt /> },
-        { href: '/app/trip', name: 'Trip', icon: <FaCar /> },
-        { href: '/app/fillup', name: 'Fill-up', icon: <FaGasPump /> },
-        //{ href: '/app/data', name: 'Data', icon: <FaTable /> },
         { href: '/app/account', name: 'Account', icon: <FaUser /> },
     ];
 
@@ -62,15 +58,12 @@ const ResponsiveNav: React.FC = () => {
                         {navLinks.map((link) => (
                             <li key={link.name}>
                                 <NavLink
-                                    to={link.href} // Use the link.path for navigation
-                                    end={link.href === '/app'} // Add 'end' if '/app' is your exact dashboard path
+                                    to={link.href}
+                                    end={link.href === '/app'}
                                     className={({ isActive }: NavLinkRenderProps) =>
-                                        // Combine base classes with active classes conditionally
-                                        //` cursor-pointer text-gray-700 hover:text-blue-400 ${isActive ? 'text-blue-400' : ''}`
                                         `flex flex-col items-center text-xs transition-colors duration-200 cursor-pointer flex items-center ${isActive ? 'text-blue-400' : ''}`
                                     }
                                 >
-                                    {/* Content remains the same as it was inside the button */}
                                     <span className="flex items-center">
                                         {link.icon && <span className="mr-2">{link.icon}</span>}
                                         {link.name}

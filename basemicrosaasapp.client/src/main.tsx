@@ -1,18 +1,14 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router";
-import Dashboard from './views/Dashboard';
-import Fillup from './views/Fillup';
-import Trip from './views/Trip';
-import Account from './views/Account';
+import Account from './views/auth/Account';
 import AppLayout from './components/AppLayout';
 import { AuthProvider } from './context/AuthContext';
 import DebugLayout from './components/DebugLayout';
 import LandingPage from './views/LandingPage';
-import Login from './views/Login';
+import Login from './views/auth/Login';
 import ProtectedRoute from './components/ProtectedRoute';
-import Register from './views/Register';
-import Data from './views/Data';
+import Register from './views/auth/Register';
 import './main.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -27,12 +23,7 @@ createRoot(document.getElementById('root')!).render(
                                 <AppLayout />
                             </ProtectedRoute>
                         }>
-                            <Route index element={<Dashboard />} />
-                            <Route path="fillup" element={<Fillup />} />
-                            <Route path="trip" element={<Trip />} />
                             <Route path="account" element={<Account />} />
-                            <Route path="data" element={<Data/>} />
-                            <Route path="*" element={<Dashboard />} />
                         </Route>
                         <Route path="login" element={<Login />} />
                         <Route path="register" element={<Register />} />
