@@ -4,14 +4,14 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import Dashboard from './views/Dashboard';
 import Fillup from './views/Fillup';
 import Trip from './views/Trip';
-import Account from './views/Account';
+import Account from './views/auth/Account';
 import AppLayout from './components/AppLayout';
 import { AuthProvider } from './context/AuthContext';
 import DebugLayout from './components/DebugLayout';
 import LandingPage from './views/LandingPage';
-import Login from './views/Login';
+import Login from './views/auth/Login';
 import ProtectedRoute from './components/ProtectedRoute';
-import Register from './views/Register';
+import Register from './views/auth/Register';
 import Data from './views/Data';
 import './main.css';
 
