@@ -15,6 +15,13 @@ jobs:
       HOME: ${{ github.workspace }}
       
     steps:
+      - name: Backup db
+        run: |
+          mkdir -p ${{ github.workspace }}/backups
+          mv ${{ github.workspace }}/publish/mydb.db ${{ github.workspace }}/backups
+          cd ${{ github.workspace }}/backups
+          zip backup_${{ github.sha }}.zip mydb.db
+    
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -60,13 +67,6 @@ jobs:
             echo "Service restarted due to stop failure. Exiting workflow."
             exit 1
           fi
-          
-      - name: Backup db
-        run: |
-          mkdir -p ${{ github.workspace }}/backups
-          mv ${{ github.workspace }}/publish/mydb.db ${{ github.workspace }}/backups
-          cd ${{ github.workspace }}/backups
-          zip backup_${{ github.sha }}.zip mydb.db
 
       - name: Publish
         run: dotnet publish -c Release -o ${{ github.workspace }}/publish
