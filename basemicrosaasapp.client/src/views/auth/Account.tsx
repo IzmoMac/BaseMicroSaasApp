@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
-import CallApi from "../api/ApiHelper";
-import { useAuth } from "../context/AuthContext";
+import CallApi from "../../api/ApiHelper";
+import { useAuth } from "../../context/AuthContext";
 
 const Account: React.FC = () => {
     const [accountInfo, setAccountInfo] = useState({
@@ -22,7 +22,7 @@ const Account: React.FC = () => {
             try {
                 setLoading(true);
 
-                const response = await CallApi("/api/account/me", 'GET', token);
+                const response = await CallApi("/api/auth/me", 'GET', token);
                 if (token !== response.token) { setToken(response.token); }
 
                 setAccountInfo(response.jsonData);

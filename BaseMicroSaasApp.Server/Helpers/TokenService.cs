@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BaseMicroSaasApp.Server;
+namespace BaseMicroSaasApp.Server.Helpers;
 
 public class TokenService
 {
