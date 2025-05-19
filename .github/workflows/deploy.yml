@@ -52,9 +52,30 @@ jobs:
           # Verify the file was copied
           ls -l BaseMicroSaasApp.Server/appsettings.json
 
+      - name: Stop service (restart and exit on failure)
+        run: |
+          if ! sudo systemctl stop cartrack-app.service; then
+            echo "Failed to stop service, attempting restart..."
+            sudo systemctl restart cartrack-app.service
+            echo "Service restarted due to stop failure. Exiting workflow."
+            exit 1
+          fi
+          
+      - name: Backup db
+        run: |
+          mkdir -p ${{ github.workspace }}/backups
+          mv ${{ github.workspace }}/publish/mydb.db ${{ github.workspace }}/backups
+          cd ${{ github.workspace }}/backups
+          zip backup_${{ github.sha }}.zip mydb.db
+
       - name: Publish
         run: dotnet publish -c Release -o ${{ github.workspace }}/publish
 
+      - name: Restore db
+        run: |
+          mkdir -p ${{ github.workspace }}/publish
+          mv ${{ github.workspace }}/backups/mydb.db ${{ github.workspace }}/publish/
+          
       - name: Move React Build Output
         run: |
           rm -rf /var/www/cartrack/html
