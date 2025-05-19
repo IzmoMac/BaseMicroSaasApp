@@ -17,9 +17,9 @@ jobs:
     steps:
       - name: Backup db
         run: |
-          mkdir -p ${{ github.workspace }}/backups
-          mv ${{ github.workspace }}/publish/mydb.db ${{ github.workspace }}/backups
-          cd ${{ github.workspace }}/backups
+          mkdir -p /root/db_backups
+          mv ${{ github.workspace }}/publish/mydb.db /root/db_backups
+          cd /root/db_backups
           zip backup_${{ github.sha }}.zip mydb.db
     
       - name: Checkout code
@@ -74,7 +74,7 @@ jobs:
       - name: Restore db
         run: |
           mkdir -p ${{ github.workspace }}/publish
-          mv ${{ github.workspace }}/backups/mydb.db ${{ github.workspace }}/publish/
+          mv /root/db_backups/mydb.db ${{ github.workspace }}/publish/
           
       - name: Move React Build Output
         run: |
