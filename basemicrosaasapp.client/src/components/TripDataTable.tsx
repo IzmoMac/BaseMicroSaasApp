@@ -31,7 +31,7 @@ const TripDataTable: React.FC = () => {
 
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto dark:bg-gray-900">
             <table className="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700">
                 <thead className="ltr:text-left rtl:text-right">
                     <tr className="*:font-medium *:text-gray-900 dark:*:text-white">
@@ -46,13 +46,13 @@ const TripDataTable: React.FC = () => {
                 <tbody className="divide-y divide-gray-200 *:even:bg-gray-50 dark:divide-gray-700 dark:*:even:bg-gray-800">
                     {trips.map(trip => (
                         <tr className="*:text-gray-900 *:first:font-medium dark:*:text-white" key={trip.id}>
-                            <td>
+                            <td className="px-3 py-2 whitespace-nowrap">
                                 {trip.tripType === "personal" ? <FaHome /> : <FaBriefcase />}
                             </td>
-                            <td>{trip.tripDistance}</td>
-                            <td>{trip.odometerReading}</td>
-                            <td>{new Date(trip.date).toLocaleDateString()}</td>
-                            <td>{trip.notes}</td>
+                            <td className="px-3 py-2 whitespace-nowrap">{trip.tripDistance}</td>
+                            <td className="px-3 py-2 whitespace-nowrap">{trip.odometerReading}</td>
+                            <td className="px-3 py-2 whitespace-nowrap">{new Date(trip.date).toLocaleDateString()}</td>
+                            <td className="px-3 py-2 whitespace-nowrap">{trip.notes}</td>
                         </tr>
                     ))}
                 </tbody>
