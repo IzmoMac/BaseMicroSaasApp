@@ -21,7 +21,11 @@ const Register: React.FC = () => {
         .then(async (response: Response) => {
             const data = await response.json().catch(() => ({})); // Handle invalid JSON
             if (data && data.message) {
-                alert(data.message);
+                    alert(data.message);
+                if (response.ok) {
+
+                    navigate('/login');
+                }
             } else if (!response.ok) {
                 alert("Register failed");
             } else {
