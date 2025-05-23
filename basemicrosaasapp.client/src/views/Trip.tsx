@@ -4,7 +4,7 @@ import { useState } from "react";
 import CallApi from "../api/ApiHelper";
 import { useAuth } from "../context/AuthContext";
 import React from "react";
-
+import TripDataTable from "../components/TripDataTable";
 export default function Trip() {
     const [tripType, setTripType] = useState<"personal" | "work">("personal");
     const [tripDistance, setTripDistance] = useState("");
@@ -161,6 +161,9 @@ export default function Trip() {
                     </button>
                 </form>
             </div>
+
+            <TripDataTable />
+
         </div>
 
 

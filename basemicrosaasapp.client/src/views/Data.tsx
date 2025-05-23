@@ -1,26 +1,8 @@
 import { useEffect, useState } from "react";
 import CallApi from "../api/ApiHelper";
 import { useAuth } from "../context/AuthContext";
-// TypeScript interfaces matching your C# models (excluding UserId and User)
-interface Trip {
-    id: number;
-    tripType: string;
-    tripDistance: number;
-    odometerReading: number;
-    date: string; // ISO string
-    notes: string;
-}
-
-interface Fillup {
-    id: number;
-    odometerReading: number;
-    fuelAmount: number;
-    pricePerLiter: number;
-    isFullTank: boolean;
-    skippedAFillUp: boolean;
-    totalCost: number;
-    date: string; // ISO string
-}
+import type Trip from "../types/Trip";
+import type Fillup from "../types/Fillup";
 
 const Data: React.FC = () => {
     const { setToken, token } = useAuth();
@@ -55,9 +37,9 @@ const Data: React.FC = () => {
                 <table className="min-w-full border">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            {/*<th>ID</th>*/}
                             <th>Type</th>
-                            <th>Distance (km)</th>
+                            <th>km</th>
                             <th>Odometer</th>
                             <th>Date</th>
                             <th>Notes</th>
@@ -66,7 +48,8 @@ const Data: React.FC = () => {
                     <tbody>
                         {trips.map(trip => (
                             <tr key={trip.id}>
-                                <td>{trip.id}</td>
+                                {/*<td>{trip.id}</td>*/}
+                                {/*Add Home icon if peronsal or work icon if work */ }
                                 <td>{trip.tripType}</td>
                                 <td>{trip.tripDistance}</td>
                                 <td>{trip.odometerReading}</td>

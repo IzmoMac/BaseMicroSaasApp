@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
             setLoading(false);
         };
         fetchData();
-    }, [token, setToken]);
+    }, [token, setToken, setDashboardData]);
 
     // Use dummy data if dashboardData is not available
     const dataToShow = dashboardData ?? dummyDashboardData;

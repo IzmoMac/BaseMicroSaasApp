@@ -69,7 +69,11 @@ public class AccountController : Controller
         if (string.IsNullOrEmpty(userId)) { return Unauthorized(); }
         // Fetch the user from the database
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null) { return NotFound(new { message = "User not found in the database" }); }
+        if (user == null) 
+        { 
+            //TODO LOG
+            return Json(null); 
+        }
 
 
         //TODO ISMO Add logic to make the dashboard, 
@@ -78,7 +82,8 @@ public class AccountController : Controller
 
         if(fs.Count == 0 || ts.Count == 0)
         {
-            return NotFound(new { message = "No data found" });
+            //TODO LOG
+            return Json(null);
         }
         var totalDistance = GetTotalDistance(fs, ts);
         var totalWork = ts.Where(t => t.TripType == "home").Sum(t => t.TripDistance);
