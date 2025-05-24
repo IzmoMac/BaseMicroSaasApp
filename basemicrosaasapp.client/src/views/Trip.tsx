@@ -43,6 +43,7 @@ export default function Trip() {
     };
 
     return (
+<div>
         <div className="flex flex-col gap-6 m-3">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Trip</h1>
@@ -161,12 +162,9 @@ export default function Trip() {
                     </button>
                 </form>
             </div>
-
-            <TripDataTable />
-
         </div>
 
-
-
+     <TripDataTable />
+</div
     );
 }
