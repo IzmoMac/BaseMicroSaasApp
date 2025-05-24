@@ -165,6 +165,6 @@ export default function Trip() {
         </div>
 
      <TripDataTable />
-</div
+</div>
     );
 }
