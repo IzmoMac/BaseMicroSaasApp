@@ -31,7 +31,7 @@ const TripDataTable: React.FC = () => {
 
 
     return (
-        <div className="overflow-x-auto dark:bg-gray-900 max-w-sm md:max-w-none">
+        <div className="overflow-x-auto dark:bg-gray-900 max-w-sm md:max-w-none mx-auto">
             <table className="divide-y-2 divide-gray-200 dark:divide-gray-700">
                 <thead className="ltr:text-left rtl:text-right">
                     <tr className="*:font-medium *:text-gray-900 dark:*:text-white">
