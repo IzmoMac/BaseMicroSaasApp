@@ -65,7 +65,7 @@ export default function Trip() {
                                 onClick={() => setTripType("personal")}
                             >
                                 <div className="h-4 w-4">
-                                <FaHome  />  
+                                    <FaHome />
                                 </div>
                                 <span >Personal</span>
                             </button>
@@ -73,8 +73,8 @@ export default function Trip() {
                                 type="button"
                                 className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md transition-all 
                                 ${tripType === "work"
-                                    ? "bg-white dark:bg-gray-600 shadow-sm cursor-default"
-                                    : "text-gray-500 dark:text-gray-400 cursor-pointer"
+                                        ? "bg-white dark:bg-gray-600 shadow-sm cursor-default"
+                                        : "text-gray-500 dark:text-gray-400 cursor-pointer"
                                     }`}
                                 onClick={() => setTripType("work")}
                             >
@@ -161,12 +161,7 @@ export default function Trip() {
                     </button>
                 </form>
             </div>
-
             <TripDataTable />
-
         </div>
-
-
-
     );
 }
