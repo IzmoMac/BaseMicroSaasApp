@@ -43,7 +43,13 @@ export default defineConfig({
     plugins: [plugin(), tailwindcss()],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./src', import.meta.url))
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+            '@components': path.resolve(__dirname, 'src/components'),
+            '@trip': path.resolve(__dirname, 'src/trip'),
+            '@fillup': path.resolve(__dirname, 'src/fillup'),
+            '@context': path.resolve(__dirname, 'src/context'),
+            '@utils': path.resolve(__dirname, 'src/utils'),
+            '@views': path.resolve(__dirname, 'src/views'),
         }
     },
     server: {

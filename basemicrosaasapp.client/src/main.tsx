@@ -1,18 +1,18 @@
+import AppLayout from '@components/AppLayout';
+import DebugLayout from '@components/DebugLayout';
+import ProtectedRoute from '@components/ProtectedRoute';
+import { AuthProvider } from '@context/AuthContext';
+import Account from '@views/auth/Account';
+import Login from '@views/auth/Login';
+import Register from '@views/auth/Register';
+import Dashboard from '@views/Dashboard';
+import Data from '@views/Data';
+import Fillup from '@views/Fillup';
+import LandingPage from '@views/LandingPage';
+import Trip from '@views/Trip';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router";
-import Dashboard from './views/Dashboard';
-import Fillup from './views/Fillup';
-import Trip from './views/Trip';
-import Account from './views/auth/Account';
-import AppLayout from './components/AppLayout';
-import { AuthProvider } from './context/AuthContext';
-import DebugLayout from './components/DebugLayout';
-import LandingPage from './views/LandingPage';
-import Login from './views/auth/Login';
-import ProtectedRoute from './components/ProtectedRoute';
-import Register from './views/auth/Register';
-import Data from './views/Data';
 import './main.css';
 
 createRoot(document.getElementById('root')!).render(

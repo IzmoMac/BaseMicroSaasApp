@@ -1,43 +1,46 @@
+import { useAuth } from "@context/AuthContext";
+import formReducer from "@fillup/fillup-reducer";
+import { type Fillup, type FillupState, initialState } from "@fillup/fillup-types";
+import CallApi from "@utils/ApiHelper";
 import type React from "react";
-import { useAuth } from "../context/AuthContext";
-import { useState, useEffect } from "react";
+import { useReducer } from "react";
 import { FaCheck } from "react-icons/fa";
-import CallApi from "../api/ApiHelper";
+
+function convertToPostData(form: FillupState): Partial<Fillup> {
+    return {
+        odometerReading: parseFloat(form.odometerReading),
+        fuelAmount: parseFloat(form.fuelAmount),
+        pricePerLiter: parseFloat(form.pricePerLiter),
+        isFullTank: form.isFullTank,
+        skippedAFillUp: form.skippedAFillUp,
+        totalCost: parseFloat(form.totalCost),
+        date: form.date,
+    };
+}
 
 export default function FillUp() {
-    const [odometerReading, setOdometerReading] = useState("");
-    const [fuelAmount, setFuelAmount] = useState("");
-    const [pricePerLiter, setPricePerLiter] = useState("");
-    const [isFullTank, setIsFullTank] = useState(false);
-    const [skippedLastFillUp, setSkippedLastFillUp] = useState(false)
-    const [totalCost, setTotalCost] = useState("0.00");
-    const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+    const [form, dispatchForm] = useReducer(formReducer, initialState);
     const { token, setToken } = useAuth();
 
-    // Calculate total cost whenever fuel amount or price changes
-    useEffect(() => {
-        if (fuelAmount && pricePerLiter) {
-            const total = (
-                Number.parseFloat(fuelAmount) * Number.parseFloat(pricePerLiter)
-            ).toFixed(2);
-            setTotalCost(total);
-        } else {
-            setTotalCost("0.00");
-        }
-    }, [fuelAmount, pricePerLiter]);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatchForm({
+            type: 'UPDATE_FIELD',
+            field: e.target.name as keyof FillupState,
+            value: e.target.value,
+        });
+    };
+    const handleChangeCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatchForm({
+            type: 'UPDATE_CHECKBOX',
+            field: e.target.name as keyof FillupState,
+            value: e.target.checked,
+        });
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const formData = {
-            odometerReading: parseFloat(odometerReading),
-            fuelAmount: parseFloat(fuelAmount),
-            pricePerLiter: parseFloat(pricePerLiter),
-            isFullTank,
-            skippedLastFillUp,
-            totalCost: parseFloat(totalCost),
-            date,
-        };
+        const formData = convertToPostData(form);
 
         try {
             const response = await CallApi('/api/fillup/record', 'POST', token, JSON.stringify(formData));
@@ -46,14 +49,7 @@ export default function FillUp() {
             const result = response.jsonData;
             console.log(result.message);
 
-            // Reset the form
-            setOdometerReading("");
-            setFuelAmount("");
-            setPricePerLiter("");
-            setIsFullTank(false);
-            setSkippedLastFillUp(false);
-            setTotalCost("0.00");
-            setDate(new Date().toISOString().split("T")[0]);
+            dispatchForm({ type: 'RESET_FORM' });
             alert("Saved Succesfully");
         } catch (error) {
             console.error('Error:', error);
@@ -78,8 +74,9 @@ export default function FillUp() {
                             min="0"
                             placeholder="e.g. 12345"
                             className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={odometerReading}
-                            onChange={(e) => setOdometerReading(e.target.value)}
+                            name="odometerReading"
+                            value={form.odometerReading}
+                            onChange={handleChange}
                             required
                         />
                     </div>
@@ -96,60 +93,63 @@ export default function FillUp() {
                             step="0.01"
                             placeholder="e.g. 45.5"
                             className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={fuelAmount}
-                            onChange={(e) => setFuelAmount(e.target.value)}
+                            name="fuelAmount"
+                            value={form.fuelAmount}
+                            onChange={handleChange}
                             required
                         />
                         {/* Checkboxes */}
                         <div className="flex flex-wrap gap-3 mt-2">
                             <label
                                 htmlFor="fullTank"
-                                className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors ${isFullTank
+                                className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors ${form.isFullTank
                                     ? "bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800"
                                     : "bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
                                     }`}
                             >
                                 <div
-                                    className={`w-5 h-5 flex items-center justify-center rounded border ${isFullTank
+                                    className={`w-5 h-5 flex items-center justify-center rounded border ${form.isFullTank
                                         ? "bg-blue-500 border-blue-500 dark:bg-blue-600 dark:border-blue-600"
                                         : "border-gray-300 dark:border-gray-500"
                                         }`}
                                 >
-                                    {isFullTank && <div className="w-3.5 h-3.5 text-white" > <FaCheck /> </div>}
+                                    {form.isFullTank && <div className="w-3.5 h-3.5 text-white" > <FaCheck /> </div>}
                                 </div>
                                 <input
                                     type="checkbox"
                                     id="fullTank"
                                     className="sr-only"
-                                    checked={isFullTank}
-                                    onChange={(e) => setIsFullTank(e.target.checked)}
+                                    name="isFullTank"
+                                    checked={form.isFullTank}
+                                    onChange={handleChangeCheckBox}
                                 />
-                                <span className={`text-sm ${isFullTank ? "text-blue-700 dark:text-blue-300" : ""}`}>Full Tank</span>
+                                <span className={`text-sm ${form.isFullTank ? "text-blue-700 dark:text-blue-300" : ""}`}>Full Tank</span>
                             </label>
 
                             <label
-                                htmlFor="skippedLastFillUp"
-                                className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors ${skippedLastFillUp
+                                htmlFor="skippedAFillUp"
+                                className={`flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-colors ${form.skippedAFillUp
                                     ? "bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800"
                                     : "bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
                                     }`}
                             >
                                 <div
-                                    className={`w-5 h-5 flex items-center justify-center rounded border ${skippedLastFillUp
+                                    className={`w-5 h-5 flex items-center justify-center rounded border ${form.skippedAFillUp
                                         ? "bg-blue-500 border-blue-500 dark:bg-blue-600 dark:border-blue-600"
                                         : "border-gray-300 dark:border-gray-500"
                                         }`}
                                 >
-                                    {skippedLastFillUp && <div className="w-3.5 h-3.5 text-white" > <FaCheck /> </div>}
+                                    {form.skippedAFillUp && <div className="w-3.5 h-3.5 text-white" > <FaCheck /> </div>}
                                 </div>
                                 <input
                                     type="checkbox"
-                                    id="skippedLastFillUp"
+                                    id="skippedAFillUp"
                                     className="sr-only"
-                                    checked={skippedLastFillUp}
-                                    onChange={(e) => setSkippedLastFillUp(e.target.checked)}
+                                    name="skippedAFillUp"
+                                    checked={form.skippedAFillUp}
+                                    onChange={handleChangeCheckBox}
                                 />
-                                <span className={`text-sm ${skippedLastFillUp ? "text-blue-700 dark:text-blue-300" : ""}`}>
+                                <span className={`text-sm ${form.skippedAFillUp ? "text-blue-700 dark:text-blue-300" : ""}`}>
                                     Skipped last Fill-up
                                 </span>
                             </label>
@@ -174,8 +174,9 @@ export default function FillUp() {
                                     step="0.001"
                                     placeholder="Price per liter"
                                     className="pl-8 pr-4 py-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    value={pricePerLiter}
-                                    onChange={(e) => setPricePerLiter(e.target.value)}
+                                    name="pricePerLiter"
+                                    value={form.pricePerLiter}
+                                    onChange={handleChange}
                                     required
                                 />
                             </div>
@@ -187,7 +188,7 @@ export default function FillUp() {
                                     type="text"
                                     id="totalCost"
                                     className="pl-8 pr-4 py-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-not-allowed"
-                                    value={totalCost}
+                                    value={form.totalCost}
                                     readOnly
                                 />
                             </div>
@@ -204,8 +205,9 @@ export default function FillUp() {
                                 type="date"
                                 id="date"
                                 className="px-4 py-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                value={date}
-                                onChange={(e) => setDate(e.target.value)}
+                                name="date"
+                                value={form.date}
+                                onChange={handleChange}
                                 required
                             />
                             {/* Removed Calendar icon from lucide-react */}

@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router';
-import ResponsiveNav from './ResponsiveNav';
+import ResponsiveNav from '@components/ResponsiveNav';
 
 const AppLayout = () => {
 

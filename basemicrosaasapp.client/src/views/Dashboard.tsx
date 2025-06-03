@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { StatsBoard } from "../components/stats-board";
-import CallApi from "../api/ApiHelper";
-import { useAuth } from "../context/AuthContext";
+import { StatsBoard } from "@components/StatsBoard";
+import CallApi from "@utils/ApiHelper";
+import { useAuth } from "@context/AuthContext";
 import "./dashboard.css"
 
 interface DashBoard {

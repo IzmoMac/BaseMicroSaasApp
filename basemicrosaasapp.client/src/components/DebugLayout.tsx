@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router';
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 
 const DebugLayout: React.FC = () => {
     const { token } = useAuth();

@@ -1,10 +1,8 @@
-import { FaHome, FaBriefcase } from "react-icons/fa";
-
-import { useState } from "react";
-import CallApi from "../api/ApiHelper";
-import { useAuth } from "../context/AuthContext";
-import React from "react";
-import TripDataTable from "../components/TripDataTable";
+import TripDataTable from "@components/TripDataTable";
+import { useAuth } from "@context/AuthContext";
+import CallApi from "@utils/ApiHelper";
+import React, { useState } from "react";
+import { FaBriefcase, FaHome } from "react-icons/fa";
 export default function Trip() {
     const [tripType, setTripType] = useState<"personal" | "work">("personal");
     const [tripDistance, setTripDistance] = useState("");

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import CallApi from "../api/ApiHelper";
+import CallApi from "@utils/ApiHelper";
 import { useAuth } from "../context/AuthContext";
-import type Trip from "../types/Trip";
-import type Fillup from "../types/Fillup";
+import type Trip from "@trip/trip-types";
+import type { Fillup } from "@fillup/fillup-types";
 
 const Data: React.FC = () => {
     const { setToken, token } = useAuth();

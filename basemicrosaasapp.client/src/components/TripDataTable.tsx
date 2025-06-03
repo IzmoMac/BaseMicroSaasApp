@@ -1,10 +1,8 @@
-import { FaHome, FaBriefcase } from "react-icons/fa";
-
-import { useState, useEffect } from "react";
-import CallApi from "../api/ApiHelper";
-import { useAuth } from "../context/AuthContext";
-import React from "react";
-import type Trip from "../types/Trip";
+import { useAuth } from "@context/AuthContext";
+import type Trip from "@trip/trip-types";
+import CallApi from "@utils/ApiHelper";
+import React, { useEffect, useState } from "react";
+import { FaBriefcase, FaHome } from "react-icons/fa";
 
 const TripDataTable: React.FC = () => {
     const [trips, setTrips] = useState<Trip[]>([]);
