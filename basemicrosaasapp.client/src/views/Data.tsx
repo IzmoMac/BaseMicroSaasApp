@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import CallApi from "@utils/ApiHelper";
-import { useAuth } from "../context/AuthContext";
-import type Trip from "@trip/trip-types";
+import { useAuth } from "@context/AuthContext";
 import type { Fillup } from "@fillup/fillup-types";
+import type Trip from "@trip/trip-types";
+import CallApi from "@utils/ApiHelper";
+import { useEffect, useState } from "react";
 
 const Data: React.FC = () => {
     const { setToken, token } = useAuth();
@@ -13,7 +13,6 @@ const Data: React.FC = () => {
 
     useEffect(() => {
         async function fetchData() {
-            // Replace with your actual API endpoints
             const tripRes = await CallApi("/api/trip", "GET", token);
             if (token !== tripRes.token) { setToken(tripRes.token); }
 

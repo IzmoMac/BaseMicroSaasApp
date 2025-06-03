@@ -55,6 +55,7 @@ export default function FillUp() {
             console.error('Error:', error);
         }
     };
+
     return (
         <div className="flex flex-col gap-6 m-3">
             <div className="flex justify-between items-center">

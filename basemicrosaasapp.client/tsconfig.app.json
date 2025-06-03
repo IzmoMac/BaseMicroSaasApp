@@ -31,7 +31,8 @@
       "@fillup/*": [ "fillup/*" ],
       "@context/*": [ "context/*" ],
       "@utils/*": [ "utils/*" ],
-      "@views/*": [ "views/*" ]
+      "@views/*": [ "views/*" ],
+      "@/*": [ "./src/*" ]
     }
   },
   "include": ["src"]
